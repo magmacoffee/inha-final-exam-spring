@@ -26,3 +26,4 @@ src/resources/application.properties
 .gradle/
 .idea/
 build/
+.idea/workspace.xml
