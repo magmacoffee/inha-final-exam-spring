@@ -23,7 +23,7 @@
 hs_err_pid*
 
 src/resources/application.properties
-.gradle/
-.idea/
+.gradle/*
+.idea/*
 build/
 .idea/workspace.xml
