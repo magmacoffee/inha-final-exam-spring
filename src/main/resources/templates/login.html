@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workgroup Cloud Login</title>
+    <link type="text/css" rel="stylesheet" href="css/styles.css">
+    <link type="text/css" rel="stylesheet" href="css/wgcloud.css">
+</head>
+<body class="form-body">
+<div class="form-content">
+    <h2 class="form-header">인하기업 협업 Cloud</h2>
+    <form action="/login" method="post">
+        <div th:if="${param.error}" th:text="${param.error}" class="alert alert-danger" role="alert">
+<!--            Invalid username and password-->
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="username" name="username" placeholder="User Id">
+            <label for="id">ID</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            <label for="password">Password</label>
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary login-button">Login</button>
+        </div>
+        <a class="signup-button" href="/signup">Sign Up</a>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    </form>
+</div>
+</body>
+</html>

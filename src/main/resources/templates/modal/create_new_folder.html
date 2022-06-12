@@ -1,0 +1,47 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<div th:fragment="createNewFolder" id="createNewFolder" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="createNewFolderLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createNewFolderLabel">폴더 생성</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                폴더 이름:
+                <input type="text" name="folderName" id="folderName" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="createNewFolder()">생성</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script">
+    function createNewFolder() {
+        let folderName = $('#folderName').val();
+        if (folderName.trim() === '' || folderName === undefined) {
+            alert('새로 만들 폴더의 이름이 입력되지 않았습니다!');
+            return;
+        }
+        $.ajax({
+            url: '/api/cloud/folder',
+            method: 'POST',
+            data: JSON.stringify({
+                'folderName': folderName
+            }),
+            contentType: 'application/json',
+            success: function(data, status, xhr) {
+                $('createNewFolder').modal('hide');
+                location.reload();
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/base_layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Inha Workgroup Cloud</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+</head>
+<body class="container" layout:fragment="content">
+    <div class="main-content">
+        <div class="main-header">
+            <h4 class="main-summary">총 업로드 파일 : 32개 (100MB)</h4>
+            <button
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#createNewFolder">
+                파일 추가
+            </button>
+        </div>
+        <hr>
+        <div>
+            <h5>최근 나의 활동</h5>
+            <table class="table">
+                <thead>
+                <th scope="col">대상</th>
+                <th scope="col">타입</th>
+                <th scope="col">활동</th>
+                <th scope="col">활동 일시</th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    // https://frontbackend.com/thymeleaf/spring-boot-bootstrap-thymeleaf-modal
+</script>
+
+</html>

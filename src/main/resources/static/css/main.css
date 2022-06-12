@@ -1,0 +1,19 @@
+.main-content {
+    padding: 5px;
+}
+
+.main-header {
+    display: flex;
+    padding: 5px;
+}
+
+.main-summary {
+    flex-grow: 1
+}
+
+hr {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}

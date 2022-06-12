@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WorkGroup Sign Up</title>
+    <link type="text/css" rel="stylesheet" href="css/styles.css">
+    <link type="text/css" rel="stylesheet" href="css/wgcloud.css">
+</head>
+<body class="form-body">
+    <div class="form-content">
+        <h1 class="form-header">인하기업 Cloud 회원가입</h1>
+        <form class="form-body4" action="/signup" method="post">
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+                <p th:text="${error}"></p>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="id" name="id" placeholder="User Id">
+                <label for="id">ID</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <label for="password">PW</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="passwordCheck" name="passwordCheck" placeholder="Password Check">
+                <label for="passwordCheck">Password Check</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="nickname" name="nickname" placeholder="Nickname">
+                <label for="passwordCheck">Nickname</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                <label for="email">Email</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone">
+                <label for="passwordCheck">Phone</label>
+            </div>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="gender" checked>
+                    <label class="form-check-label" for="gender">
+                        남성
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender2" id="gender2">
+                    <label class="form-check-label" for="gender2">
+                        여성
+                    </label>
+                </div>
+            </div>
+            <div class="d-grid gap-2" style="margin-top:5px">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </div>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        </form>
+    </div>
+</body>
+</html>
