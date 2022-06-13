@@ -10,22 +10,165 @@
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="container" layout:fragment="content">
-<div class="private-content">
-    <div class="private-header">
-        <div class="private-navbar">
+<div class="p-content">
+    <!-- 헤더 -->
+    <div class="p-header">
+        <div class="p-navbar">
             <button type="button" class="btn btn-default"><i class="fa-solid fa-arrow-up"></i></button>
-            <h5 class="private-navbar-text">현재 위치 : </h5>
-            <h5 class="private-navbar-text">/행사 준비</h5>
+            <h5 class="p-navbar__text">현재 위치 : </h5>
+            <h5 class="p-navbar__text">/</h5>
         </div>
         <button type="button" class="btn btn-primary">파일 추가</button>
     </div>
     <hr>
-    <div>
-    </div>
-    <th:block th:replace="modal/create_new_folder :: createNewFolder">modal</th:block>
-    <th:block th:replace="modal/rename :: rename">modal</th:block>
+    <!-- 파일 리스트 -->
+    <div id="file-list" class="file-list">
+        <table class="table">
 
-    <th:block th:replace="modal/create_new_folder :: script"></th:block>
+        </table>
+    </div>
+    <!-- 우클릭 메뉴 -->
+    <div id="folder-right-menu" class="dropdown-menu">
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#rename">이름변경</a>
+        <a class="dropdown-item" href="javascript:share()">공유하기</a>
+        <a class="dropdown-item" href="javascript:deleteFolder()">폴더삭제</a>
+    </div>
+    <div id="file-right-menu" class="dropdown-menu">
+        <a class="dropdown-item" href="javascript:download()">다운로드</a>
+        <a class="dropdown-item" href="javascript:rename()">이름변경</a>
+        <a class="dropdown-item" href="javascript:share()">공유하기</a>
+        <a class="dropdown-item" href="javascript:deleteFile()">파일삭제</a>
+    </div>
+    <div id="empty-space-right-menu" class="dropdown-menu">
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#fileUploadModal">업로드</a>
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#createNewFolder">폴더 생성</a>
+    </div>
+    <!-- 모달 -->
+    <th:block th:replace="modal/create_new_folder :: createNewFolder">modal</th:block>
+    <th:block th:replace="modal/file_upload :: fileUploadModal">modal</th:block>
+    <th:block th:replace="modal/rename :: renameModal">modal</th:block>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </div>
 </body>
+<script layout:fragment="script">
+    /*
+    Right Click Handling
+     */
+    $('#file-list').on('contextmenu', function(e) { // 파일 리스트 내에서 우클릭 시
+        return showRightClickMenu(e, true);
+    });
+    $('td').on('contextmenu', function(e) { // 테이블 항목 내에서 우클릭 시 (파일 또는 폴더)
+        return showRightClickMenu(e. false);
+    });
+
+    function showRightClickMenu(e, isEmpty) {
+        // 위치 조정
+        let top = e.pageY - 40;
+        let left = e.pageX - 220;
+        $('td').css('box-shadow', 'none');
+        $(this).css('box-shadow', 'inset 1px 1px 0px 0px red, inset -1px -1px 0px 0px red');
+        let id = (isEmpty) ? '#empty-space-right-menu' : (isDir ? 'folder-right-menu' : 'file-right-click-menu');
+        $(id).css({display: "block", top: top, left: left});
+        return false; // 브라우저 기본 메뉴 안뜨게
+    }
+    function hideRightClickMenu() {
+        if ( $("#folder-right-menu").css('display') == 'block' ){
+            $("#folder-right-menu").hide();
+        }
+        if ( $("#file-right-menu").css('display') == 'block' ){
+            $(" #file-right-menu ").hide();
+        }
+        if ( $("#empty-space-right-menu").css('display') == 'block' ){
+            $(" #empty-space-right-menu ").hide();
+        }
+        $('td').css('box-shadow', 'none');
+    }
+
+    // 메뉴 아이템 클릭 시 메뉴 hide
+    $("#file-list").on('click', function(e) {
+        hideRightClickMenu();
+    })
+    $("#folderRightClickMenu a").on("click", function(e) {
+        $(this).parent().hide();
+    });
+    $("#fileRightClickMenu a").on("click", function(e) {
+        $(this).parent().hide();
+    });
+    $("#emptySpaceRightClickMenu a").on("click", function(e) {
+        $(this).parent().hide();
+    });
+    /*
+    File Upload Modal Events
+     */
+    let selectedFile;
+    $('#fileUploadModal').find('#fileOpenInput').on('change', function() {
+        selectedFile = this.files[0];
+    });
+    $('#fileUploadModal').find('#btnUpload').on('click', function() {
+        if (selectedFile === undefined) {
+            alert("업로드할 파일이 선택되지 않았습니다.");
+            return;
+        }
+        let rootId = getRootFolderId();
+        let formData = new FormData();
+        formData.append("file", selectedFile);
+        $.ajax({
+            url: '/api/cloud/upload/' + rootId,
+            processData: false,
+            contentType: false,
+            method: 'POST',
+            data: formData,
+            success : function(data, status, xhr) {
+                $('#fileUploadModal').modal('hide');
+                location.reload();
+                alert('업로드가 완료되었습니다!');
+            }
+        });
+    });
+
+    /*
+    Create New Folder Modal Events
+     */
+    $('#createNewFolder').find('#btnCreateNewFolder').on('click', function() {
+        hideRightClickMenu();
+        let folderName = $('#folderName').val();
+        if (folderName.trim() === '' || folderName === undefined) {
+            alert('새로 만들 폴더의 이름이 입력되지 않았습니다!');
+            return;
+        }
+        $.ajax({
+            url: '/api/cloud/folder',
+            method: 'POST',
+            data: JSON.stringify({
+                'folderName': folderName
+            }),
+            contentType: 'application/json',
+            success: function(data, status, xhr) {
+                $('createNewFolder').modal('hide');
+                location.reload();
+            }
+        });
+    });
+    // Rename Modal Events
+    $('#renameModal').find('#btnRename').on('click', function() {
+        hideRightClickMenu();
+        let newName = $('#newName').val();
+        if (newName.trim() === '' || newName === undefined) {
+            alert('변경하려는 이름이 입력되지 않았습니다!');
+            return;
+        }
+        $.ajax({
+            url: '/api/cloud/rename',
+            method: 'POST',
+            data: JSON.stringify({
+                'newName': newName
+            }),
+            contentType: 'application/json',
+            success: function (data, status, xhr) {
+                $('rename').modal('hide');
+                location.reload();
+            }
+        });
+    });
+</script>
 </html>
