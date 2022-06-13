@@ -16,32 +16,11 @@
                 <input type="text" name="folderName" id="folderName" />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="createNewFolder()">생성</button>
+                <button id="btnCreateNewFolder" type="button" class="btn btn-primary">생성</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
 </div>
-<script layout:fragment="script">
-    function createNewFolder() {
-        let folderName = $('#folderName').val();
-        if (folderName.trim() === '' || folderName === undefined) {
-            alert('새로 만들 폴더의 이름이 입력되지 않았습니다!');
-            return;
-        }
-        $.ajax({
-            url: '/api/cloud/folder',
-            method: 'POST',
-            data: JSON.stringify({
-                'folderName': folderName
-            }),
-            contentType: 'application/json',
-            success: function(data, status, xhr) {
-                $('createNewFolder').modal('hide');
-                location.reload();
-            }
-        });
-    }
-</script>
 </body>
 </html>
