@@ -5,6 +5,7 @@ import kr.ac.inha.wgcloud.emp.repository.EmpRepository;
 import kr.ac.inha.wgcloud.emp.vo.Emp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -24,5 +25,10 @@ public class CloudServiceImpl implements CloudService {
     public Map<Object, Object> getUserSummary(String loginId) throws Exception {
         Emp emp = empRepository.selectEmpById(loginId);
         return cloudRepository.selectFileSummary(emp.getEmpId());
+    }
+
+    @Override
+    public void upload(String rootId, MultipartFile file) throws Exception {
+
     }
 }
