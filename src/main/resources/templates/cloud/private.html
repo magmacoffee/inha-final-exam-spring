@@ -88,6 +88,7 @@
         $(id).css({display: "block", top: top, left: left});
         return false; // 브라우저 기본 메뉴 안뜨게
     }
+
     function hideRightClickMenu() {
         if ( $("#folder-right-menu").css('display') == 'block' ){
             $("#folder-right-menu").hide();
@@ -118,7 +119,7 @@
     File Upload Modal Events
      */
     function getRootNo() {
-        return (curDir === '') ? 'root' : curDir;
+        return (curDir === '') ? null : curDir;
     }
     let selectedFile;
     $('#fileUploadModal').find('#fileOpenInput').on('change', function() {
@@ -130,6 +131,9 @@
             return;
         }
         let rootId = getRootNo();
+        if (rootId === null) {
+            rootId = '';
+        }
         let formData = new FormData();
         formData.append("file", selectedFile);
         $.ajax({
@@ -160,6 +164,7 @@
             url: '/api/cloud/folder',
             method: 'POST',
             data: JSON.stringify({
+                'rootId': getRootNo(),
                 'folderName': folderName
             }),
             contentType: 'application/json',
