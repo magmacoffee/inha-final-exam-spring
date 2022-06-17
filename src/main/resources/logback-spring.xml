@@ -1,0 +1,27 @@
+<!DOCTYPE xml>
+<configuration debug="true">
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d %5p [%c] %m%n</Pattern>
+        </encoder>
+    </appender>
+    <appender name="console-infolog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d %5p %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="kr.ac.inha.wgcloud" level="DEBUG" appender-ref="console" />
+
+    <logger name="jdbc" level="ERROR" appender-ref="console"/>
+    <logger name="jdbc.sqlonly" level="INFO" appender-ref="console"/>
+    <logger name="jdbc.sqltiming" level="ERROR" appender-ref="console"/>
+    <logger name="jdbc.audit" level="ERROR" appender-ref="console"/>
+    <logger name="jdbc.resultset" level="ERROR" appender-ref="console"/>
+    <logger name="jdbc.resultsettable" level="ERROR" appender-ref="console"/>
+    <logger name="jdbc.connection" level="ERROR" appender-ref="console"/>
+
+    <root level="INFO">
+        <appender-ref ref="console" />
+    </root>
+</configuration>
