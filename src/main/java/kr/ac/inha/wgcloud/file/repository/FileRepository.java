@@ -1,4 +1,4 @@
-package kr.ac.inha.wgcloud.file;
+package kr.ac.inha.wgcloud.file.repository;
 
 import org.apache.ibatis.annotations.Mapper;
 
