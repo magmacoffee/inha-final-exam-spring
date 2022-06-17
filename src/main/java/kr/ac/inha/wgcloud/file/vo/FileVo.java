@@ -1,20 +1,24 @@
 package kr.ac.inha.wgcloud.file.vo;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @Getter
 @Setter
+@Builder
 @ToString
 public class FileVo {
-    private String dirId;
+    private int dirId;
     private String groupId;
     private String empId;
     private String rootDirId;
     private String name;
+    private String orgFileName;
     private String ext;
-    private double fileSize;
+    private long fileSize;
     private String filePath;
     private String sharedEmpId;
     private boolean isFile;
