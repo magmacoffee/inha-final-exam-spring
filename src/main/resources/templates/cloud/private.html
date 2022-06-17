@@ -24,7 +24,15 @@
     <!-- 파일 리스트 -->
     <div id="file-list" class="file-list">
         <table class="table">
-
+            <tr th:each="file : ${files}">
+                <td th:id="${file.dirId} + ',' + ${file.isFile}">
+                    <img class="img-icon" th:if="${file.isFile} == true and ${file.sharedEmpId} == null" src="/img/icon_file.png" />
+                    <img class="img-icon" th:if="${file.isFile} == false and ${file.sharedEmpId} == null" src="/img/icon_folder.png" />
+                    <img class="img-icon" th:if="${file.isFile} == true and ${file.sharedEmpId} != null" src="/img/icon_share_file.png" />
+                    <img class="img-icon" th:if="${file.isFile} == false and ${file.sharedEmpId} != null" src="/img/icon_share_folder.png" />
+                    <a th:id="${file.dirId} + ',' + ${file.isFile} + ',a'" th:text="${file.orgFileName}"></a>
+                </td>
+            </tr>
         </table>
     </div>
     <!-- 우클릭 메뉴 -->
@@ -52,23 +60,31 @@
 </body>
 <script layout:fragment="script">
     let curDir = "[[${curDir}]]"
+    let selectedNo;
     /*
     Right Click Handling
      */
+    $('td').on('contextmenu', function(e) { // 파일 리스트 내에서 우클릭 시
+        return showRightClickMenu(e, false);
+    });
     $('#file-list').on('contextmenu', function(e) { // 파일 리스트 내에서 우클릭 시
         return showRightClickMenu(e, true);
     });
-    $('td').on('contextmenu', function(e) { // 테이블 항목 내에서 우클릭 시 (파일 또는 폴더)
-        return showRightClickMenu(e. false);
-    });
 
     function showRightClickMenu(e, isEmpty) {
+        let tId = e.target.id;
+        selectedNo = tId.split(',')[0];
+        let isDir = tId.split(',')[1] == 'false';
+
+        hideRightClickMenu();
+
         // 위치 조정
         let top = e.pageY - 40;
         let left = e.pageX - 220;
+
         $('td').css('box-shadow', 'none');
         $(this).css('box-shadow', 'inset 1px 1px 0px 0px red, inset -1px -1px 0px 0px red');
-        let id = (isEmpty) ? '#empty-space-right-menu' : (isDir ? 'folder-right-menu' : 'file-right-click-menu');
+        let id = (isEmpty) ? '#empty-space-right-menu' : (isDir ? '#folder-right-menu' : '#file-right-menu');
         $(id).css({display: "block", top: top, left: left});
         return false; // 브라우저 기본 메뉴 안뜨게
     }
