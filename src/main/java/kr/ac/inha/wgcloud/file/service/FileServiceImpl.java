@@ -58,12 +58,26 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void mkdir(String empId, String rootId, String groupId, String name) throws Exception {
-
+        FileVo f = FileVo
+            .builder()
+            .groupId(groupId)
+            .empId(empId)
+            .rootDirId(rootId)
+            .name(name) // 스토리지 저장 시 파일 구분용
+            .orgFileName(name)
+            .ext(null)
+            .fileSize(0)
+            .filePath(null)
+            .sharedEmpId(null)
+            .isFile(false)
+            .downCount(0)
+            .build();
+        fileRepository.insertFile(f);
     }
 
     @Override
     public void mkdir(String empId, String rootId, String name) throws Exception {
-        
+        mkdir(empId, rootId, null, name);
     }
 
     @Override
