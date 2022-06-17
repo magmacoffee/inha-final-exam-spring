@@ -30,6 +30,7 @@ public class FileServiceImpl implements FileService {
         String fileName = UUID.randomUUID().toString();
         File f = new File(fileName);
         String orgFileName = multipartFile.getOriginalFilename();
+        String name = orgFileName.substring(0, orgFileName.lastIndexOf("."));
         String ext = orgFileName.substring(orgFileName.lastIndexOf(".") + 1);
         try {
             multipartFile.transferTo(f);
@@ -40,7 +41,7 @@ public class FileServiceImpl implements FileService {
                     .empId(empId)
                     .rootDirId(rootId)
                     .name(fileName) // 스토리지 저장 시 파일 구분용
-                    .orgFileName(orgFileName)
+                    .orgFileName(name) // 확장자 제거한 이름
                     .ext(ext)
                     .fileSize(multipartFile.getSize())
                     .filePath(f.getPath())
