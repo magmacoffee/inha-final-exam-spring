@@ -6,5 +6,4 @@ import java.util.Map;
 
 public interface CloudService {
     Map<Object, Object> getUserSummary(String loginId) throws Exception;
-    void upload(String rootId, MultipartFile file) throws Exception;
 }
