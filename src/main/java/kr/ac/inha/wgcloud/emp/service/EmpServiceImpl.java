@@ -2,6 +2,7 @@ package kr.ac.inha.wgcloud.emp.service;
 
 import kr.ac.inha.wgcloud.emp.repository.EmpRepository;
 import kr.ac.inha.wgcloud.emp.vo.Emp;
+import kr.ac.inha.wgcloud.util.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
@@ -43,6 +44,11 @@ public class EmpServiceImpl implements EmpService {
         if (!emp.getPassword().equals(emp.getPasswordCheck())) {
             throw new Exception("패스워드와 패스워드 확인이 일치하지 않습니다.");
         }
+    }
+
+    @Override
+    public Emp getLoginEmp() throws Exception {
+        return getEmpById(AuthUtil.getLoginUserId());
     }
 
     @Override
