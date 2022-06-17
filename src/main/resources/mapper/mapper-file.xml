@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.ac.inha.wgcloud.file.repository.FileRepository">
+    <insert id="insertFile" parameterType="kr.ac.inha.wgcloud.file.vo.FileVo">
+    INSERT INTO
+    directory
+    (
+        dirId,
+        groupId,
+        empId,
+        rootDirId,
+        `name`,
+        orgFileName,
+        ext,
+        fileSize,
+        filePath,
+        sharedEmpId,
+        isFile,
+        downCount,
+        isDeleted,
+        createDateTime,
+        updateDateTime
+    ) VALUES
+    (
+        NULL,
+        #{groupId},
+        #{empId},
+        #{rootDirId},
+        #{name},
+        #{orgFileName},
+        #{ext},
+        #{fileSize},
+        #{filePath},
+        #{sharedEmpId},
+        #{isFile},
+        #{downCount},
+        0,
+        now(),
+        NULL
+    )
+    </insert>
+</mapper>
