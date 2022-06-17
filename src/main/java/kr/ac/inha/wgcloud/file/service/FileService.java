@@ -8,5 +8,7 @@ import java.util.List;
 public interface FileService {
     void save(String empId, String rootId, MultipartFile multipartFile) throws Exception;
     void save(String empId, String rootId, String groupId, MultipartFile multipartFile) throws Exception;
+    void mkdir(String empId, String rootId, String groupId, String name) throws Exception;
+    void mkdir(String empId, String rootId, String name) throws Exception;
     List<FileVo> getFileList(int empId) throws Exception;
 }

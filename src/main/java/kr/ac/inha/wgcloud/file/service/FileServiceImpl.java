@@ -57,6 +57,16 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public void mkdir(String empId, String rootId, String groupId, String name) throws Exception {
+
+    }
+
+    @Override
+    public void mkdir(String empId, String rootId, String name) throws Exception {
+        
+    }
+
+    @Override
     public List<FileVo> getFileList(int empId) throws Exception {
         return fileRepository.selectFileList(empId);
     }
