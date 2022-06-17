@@ -39,8 +39,11 @@ public class CloudApiController {
 
 
     @PostMapping("/rename")
-    public void rename(String newName) throws Exception {
-
+    public void rename(@RequestBody Map<String, Object> param) throws Exception {
+        fileService.rename(
+            (String) param.get("dirId"),
+            (String) param.get("newName")
+        );
     }
 
     @PostMapping("/upload")

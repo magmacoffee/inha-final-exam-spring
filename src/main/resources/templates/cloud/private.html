@@ -186,6 +186,7 @@
             url: '/api/cloud/rename',
             method: 'POST',
             data: JSON.stringify({
+                'dirId': selectedNo,
                 'newName': newName
             }),
             contentType: 'application/json',

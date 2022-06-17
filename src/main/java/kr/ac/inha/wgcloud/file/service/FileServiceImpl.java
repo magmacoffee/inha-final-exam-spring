@@ -81,6 +81,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public void rename(String dirId, String newName) throws Exception {
+        fileRepository.updateName(dirId, newName);
+    }
+
+    @Override
     public List<FileVo> getFileList(int empId) throws Exception {
         return fileRepository.selectFileList(empId);
     }

@@ -47,4 +47,7 @@
             NULL
         )
     </insert>
+    <update id="updateName">
+    UPDATE directory SET orgFileName = #{newName} WHERE dirId = #{dirId}
+    </update>
 </mapper>

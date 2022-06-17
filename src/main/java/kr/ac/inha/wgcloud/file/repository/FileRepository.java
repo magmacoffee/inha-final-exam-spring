@@ -9,4 +9,5 @@ import java.util.List;
 public interface FileRepository {
     List<FileVo> selectFileList(int empId) throws Exception;
     void insertFile(FileVo file) throws Exception;
+    void updateName(String dirId, String newName) throws Exception;
 }
