@@ -82,8 +82,28 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void rename(String dirId, String newName) throws Exception {
-        fileRepository.updateName(dirId, newName);
+    public void rename(String empId, String dirId, String newName) throws Exception {
+        FileVo file = getFileById(dirId);
+        if (file.getEmpId().equals(empId)) {
+            fileRepository.updateName(dirId, newName);
+        } else {
+            throw new Exception("본인 소유의 파일이 아닙니다!");
+        }
+    }
+
+    @Override
+    public void remove(String empId, String dirId) throws Exception {
+        FileVo file = getFileById(dirId);
+        if (file.getEmpId().equals(empId)) {
+            fileRepository.deleteFile(dirId);
+        } else {
+            throw new Exception("본인 소유의 파일이 아닙니다!");
+        }
+    }
+
+    @Override
+    public FileVo getFileById(String dirId) throws Exception {
+        return fileRepository.selectFileById(Integer.parseInt(dirId));
     }
 
     @Override

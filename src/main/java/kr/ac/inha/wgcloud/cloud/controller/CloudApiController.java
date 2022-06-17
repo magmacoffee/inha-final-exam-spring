@@ -41,6 +41,7 @@ public class CloudApiController {
     @PostMapping("/rename")
     public void rename(@RequestBody Map<String, Object> param) throws Exception {
         fileService.rename(
+            Integer.toString(empService.getLoginEmp().getEmpId()),
             (String) param.get("dirId"),
             (String) param.get("newName")
         );
@@ -63,6 +64,14 @@ public class CloudApiController {
     public ResponseEntity<?> getSummary(Principal principal) throws Exception {
         String id = principal.getName();
         return ResponseEntity.ok(cloudService.getUserSummary(id));
+    }
+
+    @DeleteMapping("/file")
+    public void deleteFile(@RequestParam String dirId) throws Exception {
+        fileService.remove(
+            Integer.toString(empService.getLoginEmp().getEmpId()),
+            dirId
+        );
     }
 
 }

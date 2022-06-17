@@ -7,7 +7,8 @@
         FROM
             directory
         WHERE
-            empId = #{empId}
+            empId = #{empId} AND
+            isDeleted = 0
     </select>
     <insert id="insertFile" parameterType="kr.ac.inha.wgcloud.file.vo.FileVo">
         INSERT INTO
@@ -47,7 +48,18 @@
             NULL
         )
     </insert>
+    <select id="selectFileById" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
+        SELECT
+            *
+        FROM
+            directory
+        WHERE
+            dirId = #{dirId}
+    </select>
     <update id="updateName">
-    UPDATE directory SET orgFileName = #{newName} WHERE dirId = #{dirId}
+        UPDATE directory SET orgFileName = #{newName} WHERE dirId = #{dirId}
+    </update>
+    <update id="deleteFile">
+        UPDATE directory SET isDeleted = 1 WHERE dirId = #{dirId}
     </update>
 </mapper>
