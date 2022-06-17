@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cloud")
@@ -27,10 +28,15 @@ public class CloudApiController {
         this.empService = empService;
     }
 
-    // 둘 다 폴더id, 파일 id 필요
     @PostMapping("/folder")
-    public void createNewFolder(String folderName) throws Exception {
+    public void createNewFolder(@RequestBody Map<String, Object> param) throws Exception {
+        fileService.mkdir(
+            Integer.toString(empService.getLoginEmp().getEmpId()),
+            (String) param.get("rootId"),
+            (String) param.get("folderName")
+        );
     }
+
 
     @PostMapping("/rename")
     public void rename(String newName) throws Exception {
