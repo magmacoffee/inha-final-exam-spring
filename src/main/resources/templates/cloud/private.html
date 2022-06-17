@@ -30,7 +30,7 @@
                     <img class="img-icon" th:if="${file.isFile} == false and ${file.sharedEmpId} == null" src="/img/icon_folder.png" />
                     <img class="img-icon" th:if="${file.isFile} == true and ${file.sharedEmpId} != null" src="/img/icon_share_file.png" />
                     <img class="img-icon" th:if="${file.isFile} == false and ${file.sharedEmpId} != null" src="/img/icon_share_folder.png" />
-                    <a th:id="${file.dirId} + ',' + ${file.isFile} + ',a'" th:text="${file.orgFileName}"></a>
+                    <a th:id="${file.dirId} + ',' + ${file.isFile} + ',a'" th:text="${file.orgFileName} + (${file.isFile} == true ? '.' + ${file.ext} : '')"></a>
                 </td>
             </tr>
         </table>
@@ -39,13 +39,13 @@
     <div id="folder-right-menu" class="dropdown-menu">
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#renameModal">이름변경</a>
         <a class="dropdown-item" href="javascript:share()">공유하기</a>
-        <a class="dropdown-item" href="javascript:deleteFolder()">폴더삭제</a>
+        <a class="dropdown-item" href="javascript:deleteFile(true)">폴더삭제</a>
     </div>
     <div id="file-right-menu" class="dropdown-menu">
         <a class="dropdown-item" href="javascript:download()">다운로드</a>
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#renameModal">이름변경</a>
         <a class="dropdown-item" href="javascript:share()">공유하기</a>
-        <a class="dropdown-item" href="javascript:deleteFile()">파일삭제</a>
+        <a class="dropdown-item" href="javascript:deleteFile(false)">파일삭제</a>
     </div>
     <div id="empty-space-right-menu" class="dropdown-menu">
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#fileUploadModal">업로드</a>
@@ -196,5 +196,18 @@
             }
         });
     });
+
+    function deleteFile(isDir) {
+        $.ajax({
+            url: '/api/cloud/file?dirId=' + selectedNo,
+            method: 'DELETE',
+            contentType: 'application/json',
+            success: function (data, status, xhr) {
+                alert('삭제가 완료되었습니다.');
+                location.reload();
+            }
+        });
+    }
+
 </script>
 </html>
