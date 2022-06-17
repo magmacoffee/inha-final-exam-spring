@@ -51,6 +51,7 @@
 </div>
 </body>
 <script layout:fragment="script">
+    let curDir = "[[${curDir}]]"
     /*
     Right Click Handling
      */
@@ -100,6 +101,9 @@
     /*
     File Upload Modal Events
      */
+    function getRootNo() {
+        return (curDir === '') ? 'root' : curDir;
+    }
     let selectedFile;
     $('#fileUploadModal').find('#fileOpenInput').on('change', function() {
         selectedFile = this.files[0];
@@ -109,7 +113,7 @@
             alert("업로드할 파일이 선택되지 않았습니다.");
             return;
         }
-        let rootId = getRootFolderId();
+        let rootId = getRootNo();
         let formData = new FormData();
         formData.append("file", selectedFile);
         $.ajax({
