@@ -43,10 +43,14 @@ public class CloudApiController {
 
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<?> upload(MultipartFile file) throws Exception {
+        return upload(null, file);
+    }
+
     @PostMapping("/upload/{rootId}")
     public ResponseEntity<?> upload(@PathVariable String rootId, MultipartFile file) throws Exception {
         Emp emp = empService.getEmpById(AuthUtil.getLoginUserId());
-        rootId = rootId.equals("root") ? null : rootId;
         fileService.save(Integer.toString(emp.getEmpId()), rootId, file);
         return ResponseEntity.ok(null);
     }
