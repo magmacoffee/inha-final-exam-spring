@@ -2,9 +2,11 @@ package kr.ac.inha.wgcloud.emp.vo;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class Emp {
     private int empId;
     private String id;
