@@ -14,7 +14,7 @@
     <logger name="kr.ac.inha.wgcloud" level="DEBUG" appender-ref="console" />
 
     <logger name="jdbc" level="ERROR" appender-ref="console"/>
-    <logger name="jdbc.sqlonly" level="INFO" appender-ref="console"/>
+    <logger name="jdbc.sqlonly" level="ERROR" appender-ref="console"/>
     <logger name="jdbc.sqltiming" level="ERROR" appender-ref="console"/>
     <logger name="jdbc.audit" level="ERROR" appender-ref="console"/>
     <logger name="jdbc.resultset" level="ERROR" appender-ref="console"/>
