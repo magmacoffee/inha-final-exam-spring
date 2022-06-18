@@ -8,6 +8,17 @@
             directory
         WHERE
             empId = #{empId} AND
+            rootDirId = #{dirId} AND
+            isDeleted = 0
+    </select>
+    <select id="selectRootFileList" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
+        SELECT
+            *
+        FROM
+            directory
+        WHERE
+            empId = #{empId} AND
+            rootDirId IS NULL AND
             isDeleted = 0
     </select>
     <insert id="insertFile" parameterType="kr.ac.inha.wgcloud.file.vo.FileVo">
@@ -34,7 +45,7 @@
             NULL,
             #{groupId},
             #{empId},
-            #{rootDirId},
+            #{rootDirId, jdbcType=VARCHAR},
             #{name},
             #{orgFileName},
             #{ext},

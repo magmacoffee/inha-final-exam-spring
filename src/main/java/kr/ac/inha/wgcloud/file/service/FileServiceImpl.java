@@ -20,6 +20,18 @@ public class FileServiceImpl implements FileService {
         this.fileRepository = fileRepository;
     }
 
+    private String getCurPath(String rootId, String fileName) throws Exception {
+        if (rootId == null || rootId.equals("")) {
+            return "/" + fileName;
+        } else {
+            FileVo file = getFileById(rootId);
+            if (file.getFilePath().equals("/")) {
+                return "/" + fileName;
+            }
+            return file.getFilePath() + "/" + fileName;
+        }
+    }
+
     @Override
     public void save(String empId, String rootId, MultipartFile multi) throws Exception {
         save(empId, rootId,null, multi);
@@ -32,6 +44,7 @@ public class FileServiceImpl implements FileService {
         String orgFileName = multipartFile.getOriginalFilename();
         String name = orgFileName.substring(0, orgFileName.lastIndexOf("."));
         String ext = orgFileName.substring(orgFileName.lastIndexOf(".") + 1);
+        String path = getCurPath(rootId, name);
         try {
             multipartFile.transferTo(f);
             fileRepository.insertFile(
@@ -44,7 +57,7 @@ public class FileServiceImpl implements FileService {
                     .orgFileName(name) // 확장자 제거한 이름
                     .ext(ext)
                     .fileSize(multipartFile.getSize())
-                    .filePath(f.getPath())
+                    .filePath(path)
                     .sharedEmpId(null)
                     .isFile(true)
                     .downCount(0)
@@ -59,6 +72,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void mkdir(String empId, String rootId, String groupId, String name) throws Exception {
+        String path = getCurPath(rootId, name);
         FileVo f = FileVo
             .builder()
             .groupId(groupId)
@@ -68,7 +82,7 @@ public class FileServiceImpl implements FileService {
             .orgFileName(name)
             .ext(null)
             .fileSize(0)
-            .filePath(null)
+            .filePath(path)
             .sharedEmpId(null)
             .isFile(false)
             .downCount(0)
@@ -103,12 +117,17 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileVo getFileById(String dirId) throws Exception {
-        return fileRepository.selectFileById(Integer.parseInt(dirId));
+        return fileRepository.selectFileById(dirId);
     }
 
     @Override
-    public List<FileVo> getFileList(int empId) throws Exception {
-        return fileRepository.selectFileList(empId);
+    public List<FileVo> getFileList(String dirId, String empId) throws Exception {
+        return fileRepository.selectFileList(dirId, empId);
+    }
+
+    @Override
+    public List<FileVo> getRootFileList(String empId) throws Exception {
+        return fileRepository.selectRootFileList(empId);
     }
 
 }

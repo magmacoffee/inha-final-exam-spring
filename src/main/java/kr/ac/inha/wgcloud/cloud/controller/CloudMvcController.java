@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -40,11 +41,33 @@ public class CloudMvcController {
 
         try {
             Emp emp = empService.getEmpById(AuthUtil.getLoginUserId());
-            mv.addObject("files", fileService.getFileList(emp.getEmpId()));
+            mv.addObject("curDir", "/");
+            mv.addObject("curDirId", null);
+            mv.addObject("rootDirId", null);
+            mv.addObject("files", fileService.getRootFileList(Integer.toString(emp.getEmpId())));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
+        return mv;
+    }
+
+    @GetMapping("/private/{dirId}")
+    public ModelAndView privatePage(@PathVariable String dirId) {
+        ModelAndView mv = new ModelAndView("/cloud/private");
+        try {
+            FileVo root = fileService.getFileById(dirId);
+            if (root == null) {
+                return new ModelAndView("/error/401");
+            }
+            Emp emp = empService.getEmpById(AuthUtil.getLoginUserId());
+            mv.addObject("curDir", root.getFilePath());
+            mv.addObject("curDirId", root.getDirId());
+            mv.addObject("rootDirId", root.getRootDirId());
+            mv.addObject("files", fileService.getFileList(Integer.toString(root.getDirId()), Integer.toString(emp.getEmpId())));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return mv;
     }
 
