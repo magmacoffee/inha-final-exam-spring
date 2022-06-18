@@ -1,5 +1,7 @@
 package kr.ac.inha.wgcloud.file.service;
 
+import kr.ac.inha.wgcloud.common.ApiErrorCode;
+import kr.ac.inha.wgcloud.common.ApiException;
 import kr.ac.inha.wgcloud.file.repository.FileRepository;
 import kr.ac.inha.wgcloud.file.vo.FileVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,6 +177,17 @@ public class FileServiceImpl implements FileService {
             }
         }
         os.close();
+    }
+
+    @Override
+    public void updateShareStatus(String empId, String targetEmpId, String dirId) throws Exception {
+        FileVo fileVo = fileRepository.selectFileById(dirId);
+        if (!fileVo.getEmpId().equals(empId)) {
+            throw new ApiException(ApiErrorCode.SHARE_NOT_ALLOWED);
+        } else if (empId.equals(targetEmpId)) {
+            throw new ApiException(ApiErrorCode.CANNOT_SHARE_TO_ME);
+        }
+        fileRepository.updateShareStatus(targetEmpId, dirId);
     }
 
 }

@@ -15,4 +15,5 @@ public interface FileRepository {
     void insertFile(FileVo file) throws Exception;
     void updateName(String dirId, String newName) throws Exception;
     void deleteFile(String dirId) throws Exception;
+    void updateShareStatus(String targetEmpId, String dirId) throws Exception;
 }

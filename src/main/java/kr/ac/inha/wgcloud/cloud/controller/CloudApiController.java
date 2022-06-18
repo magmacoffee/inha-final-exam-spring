@@ -1,6 +1,8 @@
 package kr.ac.inha.wgcloud.cloud.controller;
 
 import kr.ac.inha.wgcloud.cloud.service.CloudService;
+import kr.ac.inha.wgcloud.common.ApiException;
+import kr.ac.inha.wgcloud.common.ApiErrorCode;
 import kr.ac.inha.wgcloud.emp.service.EmpService;
 import kr.ac.inha.wgcloud.emp.vo.Emp;
 import kr.ac.inha.wgcloud.file.service.FileService;
@@ -91,8 +93,17 @@ public class CloudApiController {
     }
 
     @PostMapping("/share/{dirId}")
-    public ResponseEntity<?> share(@PathVariable String dirId, @RequestBody Map<String, Object> params) {
-
+    public void share(@PathVariable String dirId, @RequestBody Map<String, Object> param) throws Exception {
+        String targetEmpId = (String) param.get("empId");
+        Emp emp = empService.getEmpById(targetEmpId);
+        if (emp == null) {
+            throw new ApiException(ApiErrorCode.EMP_NOT_EXISTS);
+        }
+        fileService.updateShareStatus(
+            Integer.toString(empService.getLoginEmp().getEmpId()),
+            Integer.toString(emp.getEmpId()),
+            dirId
+        );
     }
 
 }

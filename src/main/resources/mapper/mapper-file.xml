@@ -92,5 +92,13 @@
             isFile = 1 AND
             isDeleted = 0
     </select>
-
+    <update id="updateShareStatus">
+        UPDATE
+            directory
+        SET
+            sharedEmpId = #{targetEmpId},
+            updateDateTime = now(),
+            shareDateTime = now()
+        WHERE dirId = #{dirId}
+    </update>
 </mapper>

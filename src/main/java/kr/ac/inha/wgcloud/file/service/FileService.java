@@ -21,4 +21,5 @@ public interface FileService {
     List<FileVo> getShareFileList(String empId) throws Exception;
     List<FileVo> getFolderContent(String dirId) throws Exception;
     void download(String dirId, HttpServletResponse res) throws Exception;
+    void updateShareStatus(String empId, String targetEmpId, String dirId) throws Exception;
 }
