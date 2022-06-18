@@ -6,4 +6,5 @@ import java.util.Map;
 
 public interface CloudService {
     Map<Object, Object> getUserSummary(String loginId) throws Exception;
+    Map<Object, Object> getShareSummary(int empId) throws Exception;
 }

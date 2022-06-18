@@ -1,5 +1,6 @@
 package kr.ac.inha.wgcloud.cloud.controller;
 
+import kr.ac.inha.wgcloud.cloud.service.CloudService;
 import kr.ac.inha.wgcloud.emp.service.EmpService;
 import kr.ac.inha.wgcloud.emp.vo.Emp;
 import kr.ac.inha.wgcloud.file.service.FileService;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/cloud")
@@ -23,11 +25,13 @@ public class CloudMvcController {
 
     private EmpService empService;
     private FileService fileService;
+    private CloudService cloudService;
 
     @Autowired
-    private CloudMvcController(EmpService empService, FileService fileService) {
-    this.empService = empService;
+    private CloudMvcController(EmpService empService, FileService fileService, CloudService cloudService) {
+        this.empService = empService;
         this.fileService = fileService;
+        this.cloudService = cloudService;
     }
 
     @GetMapping("/main")
@@ -82,9 +86,16 @@ public class CloudMvcController {
     @GetMapping("/share")
     public ModelAndView share() {
         ModelAndView mv = new ModelAndView("/cloud/share");
+        try {
+            Emp emp = empService.getLoginEmp();
+            List<FileVo> shareFileList = fileService.getShareFileList(Integer.toString(emp.getEmpId()));
+            Map<Object, Object> map = cloudService.getShareSummary(empService.getLoginEmp().getEmpId());
+            mv.addObject("shareCount", map.get("fileCount"));
+            mv.addObject("files", shareFileList);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return mv;
     }
-
-
 
 }

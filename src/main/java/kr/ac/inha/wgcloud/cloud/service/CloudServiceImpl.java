@@ -30,4 +30,9 @@ public class CloudServiceImpl implements CloudService {
         return cloudRepository.selectFileSummary(emp.getEmpId());
     }
 
+    @Override
+    public Map<Object, Object> getShareSummary(int empId) throws Exception {
+        return cloudRepository.selectShareSummary(empId);
+    }
+
 }

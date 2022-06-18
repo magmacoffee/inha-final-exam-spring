@@ -84,4 +84,15 @@ public class CloudApiController {
             throw ex;
         }
     }
+
+    @GetMapping("/folder/{dirId}")
+    public ResponseEntity<?> getFolderContent(@PathVariable String dirId) throws Exception {
+        return ResponseEntity.ok(fileService.getFolderContent(dirId));
+    }
+
+    @PostMapping("/share/{dirId}")
+    public ResponseEntity<?> share(@PathVariable String dirId, @RequestBody Map<String, Object> params) {
+
+    }
+
 }

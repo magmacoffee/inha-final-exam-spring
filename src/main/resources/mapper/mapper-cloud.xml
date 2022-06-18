@@ -11,4 +11,13 @@
             isFile = 1 AND -- Only File
             empId = #{empId}
     </select>
+    <select id="selectShareSummary" resultType="map">
+        SELECT
+           COUNT(*) fileCount
+        FROM
+            directory d
+        WHERE
+              sharedEmpId = #{empId} AND
+              isDeleted = 0
+    </select>
 </mapper>
