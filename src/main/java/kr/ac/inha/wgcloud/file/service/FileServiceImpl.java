@@ -146,6 +146,16 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public List<FileVo> getShareFileList(String empId) throws Exception {
+        return fileRepository.selectShareFileList(empId);
+    }
+
+    @Override
+    public List<FileVo> getFolderContent(String dirId) throws Exception {
+        return fileRepository.selectFolderContent(dirId);
+    }
+
+    @Override
     public void download(String dirId, HttpServletResponse res) throws Exception {
         FileVo file = fileRepository.selectFileById(dirId);
         if (!file.isFile() || file.isDeleted()) {

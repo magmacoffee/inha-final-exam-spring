@@ -11,6 +11,15 @@
             rootDirId = #{dirId} AND
             isDeleted = 0
     </select>
+    <select id="selectShareFileList" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
+        SELECT
+            *
+        FROM
+            directory
+        WHERE
+            sharedEmpId = #{empId} AND
+            isDeleted = 0
+    </select>
     <select id="selectRootFileList" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
         SELECT
             *
@@ -73,4 +82,15 @@
     <update id="deleteFile">
         UPDATE directory SET isDeleted = 1 WHERE dirId = #{dirId}
     </update>
+    <select id="selectFolderContent" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
+        SELECT
+            *
+        FROM
+            directory
+        WHERE
+            rootDirId = #{dirId} AND
+            isFile = 1 AND
+            isDeleted = 0
+    </select>
+
 </mapper>
