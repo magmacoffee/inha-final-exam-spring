@@ -14,9 +14,12 @@
     <!-- 헤더 -->
     <div class="p-header">
         <div class="p-navbar">
-            <button type="button" class="btn btn-default"><i class="fa-solid fa-arrow-up"></i></button>
+            <a class="btn btn-default"
+                    th:href="'/cloud/private/' + (${rootDirId} == null ? '' : ${rootDirId})">
+                <i class="fa-solid fa-arrow-up"></i>
+            </a>
             <h5 class="p-navbar__text">현재 위치 : </h5>
-            <h5 class="p-navbar__text">/</h5>
+            <h5 class="p-navbar__text" th:text="${curDir}"></h5>
         </div>
         <button type="button" class="btn btn-primary">파일 추가</button>
     </div>
@@ -65,6 +68,8 @@
 </body>
 <script layout:fragment="script">
     let curDir = "[[${curDir}]]"
+    let curDirId = "[[${curDirId}]]"
+    let rootDirId = "[[${rootDirId}]]"
     let selectedNo;
     /*
     Right Click Handling
@@ -124,7 +129,7 @@
     File Upload Modal Events
      */
     function getRootNo() {
-        return (curDir === '') ? null : curDir;
+        return curDirId === '' || curDirId === null ? null : curDirId;
     }
     let selectedFile;
     $('#fileUploadModal').find('#fileOpenInput').on('change', function() {
@@ -218,13 +223,21 @@
 
     }
 
+    function gotoRoot() {
+        console.log('asdfasdfsadf')
+        if (curDirId === null || curDirId === '') {
+            return;
+        }
+        location.href = "/cloud/private/root" + curDirId;
+    }
+
     function handleClickFile(dirId, isFile) {
         if (isFile) {
-            // 폴더 이동
-            location.href = "/cloud/private/" + dirId;
-        } else {
             // 파일 다운로드
             download(dirId);
+        } else {
+            // 폴더 이동
+            location.href = "/cloud/private/" + dirId;
         }
     }
 </script>
