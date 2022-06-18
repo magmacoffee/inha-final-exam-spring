@@ -6,8 +6,116 @@
 <head>
   <meta charset="UTF-8">
   <title>Inha Workgroup Cloud</title>
+  <link rel="stylesheet" type="text/css" href="/css/private.css"/>
+  <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="container" layout:fragment="content">
-Share
+  <!-- 헤더 -->
+  <div class="p-header">
+    <div class="p-navbar">
+      <h5 class="p-navbar__text" th:text="'공유받은 항목 : ' + ${shareCount} + '개'"></h5>
+    </div>
+  </div>
+  <!-- 파일 리스트 -->
+  <div id="file-list" class="file-list">
+    <table class="table">
+      <thead>
+        <th scope="col">대상</th>
+        <th scope="col">타입</th>
+        <th scope="col">공유자</th>
+        <th scope="col">공유 받은 일시</th>
+      </thead>
+      <tbody>
+        <tr th:each="file : ${files}" th:attr="onclick=|handleClickFile(${file.dirId}, ${file.isFile})|">
+          <td>
+            <a th:id="${file.dirId} + ',' + ${file.isFile} + ',a'"
+               th:text="${file.orgFileName}"
+               href="javascript:;"
+            />
+          </td>
+          <td th:if="${file.isFile} == true">파일</td>
+          <td th:if="${file.isFile} == false">폴더</td>
+          <td>ㅁ</td>
+          <td th:text="${file.shareDateTime}" />
+        </tr>
+      </tbody>
+    </table>
+    <!--  Folder Modal -->
+    <div class="modal fade" id="folderModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 th:id="folder-modal__title" class="modal-title" id="folderModalLabel"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script layout:fragment="script">
+
+    function download(dirId) {
+      $.ajax({
+        url: '/api/cloud/download/' + dirId,
+        type: 'GET',
+        xhrFields: {
+          responseType: 'arraybuffer',
+        },
+        success: function(data, status, xhr) {
+          if (!data) { return; }
+          try {
+            var fileName = decodeURIComponent(xhr.getResponseHeader("X-Filename"));
+            var blob = new Blob([data], { type: xhr.getResponseHeader('content-type') });
+
+            if (window.navigator.msSaveOrOpenBlob) { // IE 10+
+              window.navigator.msSaveOrOpenBlob(blob, fileName);
+            } else { // not IE
+              var link = document.createElement('a');
+              var url = window.URL.createObjectURL(blob);
+              link.href = url;
+              link.target = '_self';
+              if (fileName) link.download = fileName;
+              document.body.append(link);
+              link.click();
+              link.remove();
+              window.URL.revokeObjectURL(url);
+            }
+          } catch (e) {
+            alert(e);
+          }
+        },
+        error: function(res, status, error) {
+          alert(res.responseJSON.message);
+        }
+      });
+    }
+
+    function clickFolder(dirId) {
+      $('#folderModal').modal('show');
+      $('#folder-modal__title').text('hello world');
+      $.ajax({
+        url: '/api/cloud/folder/' + selectedFileNo,
+        method: 'GET',
+        success: function(data, status, xhr) {
+
+        }
+      });
+    }
+
+    function handleClickFile(dirId, isFile) {
+      if (isFile) {
+        // 파일 다운로드
+        download(dirId);
+      } else {
+        // 폴더 이동
+        clickFolder(dirId);
+      }
+    }
+  </script>
 </body>
 </html>
