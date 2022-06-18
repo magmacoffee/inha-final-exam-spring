@@ -54,6 +54,7 @@ public class EmpServiceImpl implements EmpService {
     @Override
     public Emp getEmpById(String id) throws Exception {
         Emp emp = empRepository.selectEmpById(id);
+        if (emp == null) { return null; }
         // Password 정보 제거
         emp.setPassword(null);
         return emp;
