@@ -220,7 +220,39 @@
     }
 
     function download(dirId) {
+        $.ajax({
+            url: '/api/cloud/download/' + dirId,
+            type: 'GET',
+            xhrFields: {
+                responseType: 'arraybuffer',
+            },
+            success: function(data, status, xhr) {
+                if (!data) { return; }
+                try {
+                    var fileName = decodeURIComponent(xhr.getResponseHeader("X-Filename"));
+                    var blob = new Blob([data], { type: xhr.getResponseHeader('content-type') });
 
+                    if (window.navigator.msSaveOrOpenBlob) { // IE 10+
+                        window.navigator.msSaveOrOpenBlob(blob, fileName);
+                    } else { // not IE
+                        var link = document.createElement('a');
+                        var url = window.URL.createObjectURL(blob);
+                        link.href = url;
+                        link.target = '_self';
+                        if (fileName) link.download = fileName;
+                        document.body.append(link);
+                        link.click();
+                        link.remove();
+                        window.URL.revokeObjectURL(url);
+                    }
+                } catch (e) {
+                    alert(e);
+                }
+            },
+            error: function(res, status, error) {
+                alert(res.responseJSON.message);
+            }
+        });
     }
 
     function gotoRoot() {

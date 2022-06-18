@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Map;
 
@@ -74,4 +75,13 @@ public class CloudApiController {
         );
     }
 
+    @GetMapping("/download/{dirId}")
+    public void download(HttpServletResponse res, @PathVariable String dirId) throws Exception {
+        try {
+            fileService.download(dirId, res);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
+    }
 }

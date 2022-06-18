@@ -6,7 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +19,8 @@ import java.util.UUID;
 public class FileServiceImpl implements FileService {
 
     private FileRepository fileRepository;
+
+    private static final String SAVE_PATH = "files/";
 
     @Autowired
     public FileServiceImpl(FileRepository fileRepository) {
@@ -37,14 +44,22 @@ public class FileServiceImpl implements FileService {
         save(empId, rootId,null, multi);
     }
 
+    private File getSavePath() {
+        File dir = new File(SAVE_PATH);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        return dir;
+    }
+
     @Override
     public void save(String empId, String rootId, String groupId, MultipartFile multipartFile) throws Exception {
         String fileName = UUID.randomUUID().toString();
-        File f = new File(fileName);
+        File dir = getSavePath();
+        File f = new File(dir.getAbsolutePath() + "/" + fileName);
         String orgFileName = multipartFile.getOriginalFilename();
         String name = orgFileName.substring(0, orgFileName.lastIndexOf("."));
         String ext = orgFileName.substring(orgFileName.lastIndexOf(".") + 1);
-        String path = getCurPath(rootId, name);
         try {
             multipartFile.transferTo(f);
             fileRepository.insertFile(
@@ -57,7 +72,7 @@ public class FileServiceImpl implements FileService {
                     .orgFileName(name) // 확장자 제거한 이름
                     .ext(ext)
                     .fileSize(multipartFile.getSize())
-                    .filePath(path)
+                    .filePath(f.getAbsolutePath())
                     .sharedEmpId(null)
                     .isFile(true)
                     .downCount(0)
@@ -128,6 +143,28 @@ public class FileServiceImpl implements FileService {
     @Override
     public List<FileVo> getRootFileList(String empId) throws Exception {
         return fileRepository.selectRootFileList(empId);
+    }
+
+    @Override
+    public void download(String dirId, HttpServletResponse res) throws Exception {
+        FileVo file = fileRepository.selectFileById(dirId);
+        if (!file.isFile() || file.isDeleted()) {
+            throw new Exception("다운로드가 불가능 합니다.");
+        }
+        String fileName = URLEncoder.encode(file.getOrgFileName(), "UTF-8");
+        res.setContentType("application/octet-stream");
+        res.setHeader("Content-Transfer-Encoding", "binary;");
+        res.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
+        res.setHeader("X-Filename", fileName);
+        OutputStream os = res.getOutputStream();
+        int read;
+        byte[] buf = new byte[1024];
+        try (InputStream is = new FileInputStream(file.getFilePath())) {
+            while ((read = is.read(buf)) != -1) {
+                os.write(buf, 0, read);
+            }
+        }
+        os.close();
     }
 
 }

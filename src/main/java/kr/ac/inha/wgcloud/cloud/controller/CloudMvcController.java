@@ -6,6 +6,7 @@ import kr.ac.inha.wgcloud.file.service.FileService;
 import kr.ac.inha.wgcloud.file.vo.FileVo;
 import kr.ac.inha.wgcloud.util.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -38,7 +40,6 @@ public class CloudMvcController {
     public ModelAndView privatePage() {
         ModelAndView mv = new ModelAndView("/cloud/private");
         mv.addObject("curDir", "");
-
         try {
             Emp emp = empService.getEmpById(AuthUtil.getLoginUserId());
             mv.addObject("curDir", "/");
@@ -48,7 +49,6 @@ public class CloudMvcController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
         return mv;
     }
 
@@ -58,6 +58,8 @@ public class CloudMvcController {
         try {
             FileVo root = fileService.getFileById(dirId);
             if (root == null) {
+                return new ModelAndView("/error/401");
+            } else if (!root.getEmpId().equals(Integer.toString(empService.getLoginEmp().getEmpId()))) { // 타인 폴더 접근 방지
                 return new ModelAndView("/error/401");
             }
             Emp emp = empService.getEmpById(AuthUtil.getLoginUserId());
@@ -82,5 +84,7 @@ public class CloudMvcController {
         ModelAndView mv = new ModelAndView("/cloud/share");
         return mv;
     }
+
+
 
 }

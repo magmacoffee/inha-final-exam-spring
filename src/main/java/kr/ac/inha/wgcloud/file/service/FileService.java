@@ -3,6 +3,9 @@ package kr.ac.inha.wgcloud.file.service;
 import kr.ac.inha.wgcloud.file.vo.FileVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public interface FileService {
@@ -15,4 +18,5 @@ public interface FileService {
     FileVo getFileById(String dirId) throws Exception;
     List<FileVo> getFileList(String dirId, String empId) throws Exception;
     List<FileVo> getRootFileList(String empId) throws Exception;
+    void download(String dirId, HttpServletResponse res) throws Exception;
 }
