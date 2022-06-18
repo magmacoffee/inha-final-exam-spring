@@ -77,10 +77,20 @@
             dirId = #{dirId}
     </select>
     <update id="updateName">
-        UPDATE directory SET orgFileName = #{newName} WHERE dirId = #{dirId}
+        UPDATE
+            directory
+        SET
+            orgFileName = #{newName},
+            updateDateTime = now()
+        WHERE dirId = #{dirId}
     </update>
     <update id="deleteFile">
-        UPDATE directory SET isDeleted = 1 WHERE dirId = #{dirId}
+        UPDATE
+            directory
+        SET
+            isDeleted = 1,
+            updateDateTime = now()
+        WHERE dirId = #{dirId}
     </update>
     <select id="selectFolderContent" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
         SELECT
