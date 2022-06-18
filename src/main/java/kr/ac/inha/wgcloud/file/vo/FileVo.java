@@ -26,4 +26,5 @@ public class FileVo {
     private boolean isDeleted;
     private String createDateTime;
     private String updateDateTime;
+    private String shareDateTime;
 }
