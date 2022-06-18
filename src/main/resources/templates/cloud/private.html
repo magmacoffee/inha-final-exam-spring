@@ -226,6 +226,9 @@
                 alert('공유가 완료되었습니다.');
                 $('shareFileModal').modal('hide');
                 location.reload();
+            },
+            error: function (xhr, status, error) {
+                alert(JSON.parse(xhr.responseText).message);
             }
         });
     });
