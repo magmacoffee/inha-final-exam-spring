@@ -13,5 +13,6 @@ public interface FileService {
     void rename(String empId, String dirId, String newName) throws Exception;
     void remove(String empId, String dirId) throws Exception;
     FileVo getFileById(String dirId) throws Exception;
-    List<FileVo> getFileList(int empId) throws Exception;
+    List<FileVo> getFileList(String dirId, String empId) throws Exception;
+    List<FileVo> getRootFileList(String empId) throws Exception;
 }

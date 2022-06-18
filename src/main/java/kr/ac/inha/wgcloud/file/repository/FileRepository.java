@@ -7,8 +7,9 @@ import java.util.List;
 
 @Mapper
 public interface FileRepository {
-    List<FileVo> selectFileList(int empId) throws Exception;
-    FileVo selectFileById(int dirId) throws Exception;
+    List<FileVo> selectFileList(String dirId, String empId) throws Exception;
+    List<FileVo> selectRootFileList(String empId) throws Exception;
+    FileVo selectFileById(String dirId) throws Exception;
     void insertFile(FileVo file) throws Exception;
     void updateName(String dirId, String newName) throws Exception;
     void deleteFile(String dirId) throws Exception;
