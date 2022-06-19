@@ -124,6 +124,10 @@
       url: '/api/emp/' + id,
       method: 'GET',
       success : function(data, status, xhr) {
+        if (data.nickname === undefined) {
+          alert('존재하지 않는 임직원입니다.');
+          return;
+        }
         let html = '';
         html += '<tr>';
         html += '<td>';
@@ -308,21 +312,20 @@
       success: function(data, status, xhr) {
         if (!data) { return; }
         try {
-          var fileName = decodeURIComponent(xhr.getResponseHeader("X-Filename"));
-          var blob = new Blob([data], { type: xhr.getResponseHeader('content-type') });
-
-          if (window.navigator.msSaveOrOpenBlob) { // IE 10+
+          let fileName = decodeURIComponent(xhr.getResponseHeader("X-Filename"));
+          let blob = new Blob([data], { type: xhr.getResponseHeader('content-type') });
+          if (window.navigator.msSaveOrOpenBlob) { // IE 10+ only
             window.navigator.msSaveOrOpenBlob(blob, fileName);
-          } else { // not IE
-            var link = document.createElement('a');
-            var url = window.URL.createObjectURL(blob);
-            link.href = url;
-            link.target = '_self';
-            if (fileName) link.download = fileName;
-            document.body.append(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
+          } else {
+            let l = document.createElement('a');
+            let u = window.URL.createObjectURL(blob);
+            l.href = u;
+            l.target = '_self';
+            if (fileName) l.download = fileName;
+            document.body.append(l);
+            l.click();
+            l.remove();
+            window.URL.revokeObjectURL(u);
           }
         } catch (e) {
           alert(e);

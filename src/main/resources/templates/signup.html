@@ -38,6 +38,7 @@
                 <label for="passwordCheck">Phone</label>
             </div>
             <div>
+                성별 :
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="gender" id="gender" checked>
                     <label class="form-check-label" for="gender">
@@ -52,7 +53,7 @@
                 </div>
             </div>
             <div class="d-grid gap-2" style="margin-top:5px">
-                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <button type="submit" class="btn btn-primary">회원가입</button>
             </div>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         </form>
