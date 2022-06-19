@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Inha Workgroup Cloud</title>
-  <link rel="stylesheet" type="text/css" href="/css/private.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/group.css"/>
   <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="container" layout:fragment="content">
@@ -16,31 +16,27 @@
     <div class="p-navbar">
       <div>
         워킹 그룹
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown button
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </div>
+        <select id="p-navbar__select" onchange="onChangeSelect()">
+          <option value="선택"> 선택 </option>
+          <option th:each="group : ${groupList}"
+                  th:value="${group.groupId}"
+                  th:utext="${group.name}"></option>
+        </select>
       </div>
       <br />
       <a class="btn btn-default"
-         th:href="'/cloud/private/' + (${rootDirId} == null ? '' : ${rootDirId})">
+         th:href="'/cloud/group/' + (${groupId} == null ? '' : ${groupId}) + (${rootDirId} == null ? '' : '/' + ${rootDirId})">
         <i class="fa-solid fa-arrow-up"></i>
       </a>
       <h5 class="p-navbar__text">현재 위치 : </h5>
       <h5 class="p-navbar__text" th:text="${curDir}"></h5>
     </div>
-    <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#fileUploadModal">워킹그룹 추가</a>
+    <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#addWorkGroupModal">워킹그룹 추가</a>
   </div>
   <hr>
   <!-- 파일 리스트 -->
   <div id="file-list" class="file-list">
-    <table class="table">
+    <table class="group-file-list__table">
       <tr th:each="file : ${files}" th:attr="onclick=|handleClickFile(${file.dirId}, ${file.isFile})|">
         <td th:id="${file.dirId} + ',' + ${file.isFile}">
           <img class="img-icon" th:if="${file.isFile} == true and ${file.sharedEmpId} == null" src="/img/icon_file.png" />
@@ -58,14 +54,12 @@
   <!-- 우클릭 메뉴 -->
   <div id="folder-right-menu" class="dropdown-menu">
     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#renameModal">이름변경</a>
-    <a class="dropdown-item" href="javascript:share()">공유하기</a>
     <a class="dropdown-item" href="javascript:deleteFile(true)">폴더삭제</a>
     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#createNewFolder">폴더 생성</a>
   </div>
   <div id="file-right-menu" class="dropdown-menu">
     <a class="dropdown-item" href="javascript:download()">다운로드</a>
     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#renameModal">이름변경</a>
-    <a class="dropdown-item" href="javascript:share()">공유하기</a>
     <a class="dropdown-item" href="javascript:deleteFile(false)">파일삭제</a>
     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#createNewFolder">폴더 생성</a>
   </div>
@@ -77,6 +71,7 @@
   <th:block th:replace="modal/create_new_folder :: createNewFolder">modal</th:block>
   <th:block th:replace="modal/file_upload :: fileUploadModal">modal</th:block>
   <th:block th:replace="modal/rename :: renameModal">modal</th:block>
+  <th:block th:replace="modal/add_work_group :: addWorkGroupModal">modal</th:block>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </div>
 </body>
@@ -85,6 +80,68 @@
   let curDirId = "[[${curDirId}]]"
   let rootDirId = "[[${rootDirId}]]"
   let selectedNo;
+  let groupId = '[[${groupId}]]'
+
+  let empList = [];
+
+  $('#btnCreate').on('click', function(e) {
+    let name = $('#groupName').val();
+    if (name === '' || name === undefined) {
+      alert('그룹 이름을 입력해주세요.');
+      return;
+    }
+    if (empList.length == 0) {
+      alert('구성원을 한 명 이상 등록하셔야 합니다.');
+      return;
+    }
+    $.ajax({
+      url: '/api/group/',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        'name': name,
+        'empList': empList
+      }),
+      success : function(data, status, xhr) {
+        alert('워킹그룹이 추가되었습니다.')
+        location.reload();
+        $("#addWorkGroupModal").modal('hide');
+      },
+      error : function(res, status, error) {
+        alert(res.responseJSON.message);
+      }
+    });
+
+  });
+
+  $('#btnAddMember').on('click', function(e) {
+    let id = $('#groupMemberId').val();
+    if (id === '' || id === undefined) {
+      alert('추가할 임직원 아이디를 입력해주세요.');
+      return;
+    }
+    $.ajax({
+      url: '/api/emp/' + id,
+      method: 'GET',
+      success : function(data, status, xhr) {
+        let html = '';
+        html += '<tr>';
+        html += '<td>';
+        html += '<a id="' + data.empId + '">';
+        html += data.nickname + ' / ' + data.id + ' / ' + data.email + '</a>';
+        html += '';
+        html += '</td>';
+        html += '<td>';
+        html += '</tr>';
+        $('#group-modal__table > tbody').append(html);
+        empList.push(data.empId);
+      },
+      error : function(res, status, error) {
+        alert(res.responseJSON.message);
+      }
+    });
+  });
+
   /*
   Right Click Handling
    */
@@ -150,7 +207,10 @@
     selectedFile = this.files[0];
   });
   $('#fileUploadModal').find('#btnUpload').on('click', function() {
-    if (selectedFile === undefined) {
+    if (groupId === undefined || groupId === null) {
+      alert("그룹을 먼저 선택해주세요");
+      return;
+    } else if (selectedFile === undefined) {
       alert("업로드할 파일이 선택되지 않았습니다.");
       return;
     }
@@ -161,7 +221,7 @@
     let formData = new FormData();
     formData.append("file", selectedFile);
     $.ajax({
-      url: '/api/cloud/upload/' + rootId,
+      url: '/api/cloud/group/upload/' + groupId + '/' + rootId,
       processData: false,
       contentType: false,
       method: 'POST',
@@ -180,15 +240,20 @@
   $('#createNewFolder').find('#btnCreateNewFolder').on('click', function() {
     hideRightClickMenu();
     let folderName = $('#folderName').val();
-    if (folderName.trim() === '' || folderName === undefined) {
+    if (groupId === null || groupId === undefined) {
+      alert('그룹을 먼저 선택해주세요.');
+      return;
+    }
+    else if (folderName.trim() === '' || folderName === undefined) {
       alert('새로 만들 폴더의 이름이 입력되지 않았습니다!');
       return;
     }
     $.ajax({
-      url: '/api/cloud/folder',
+      url: '/api/cloud/group/folder',
       method: 'POST',
       data: JSON.stringify({
         'rootId': getRootNo(),
+        'groupId': groupId,
         'folderName': folderName
       }),
       contentType: 'application/json',
@@ -270,11 +335,10 @@
   }
 
   function gotoRoot() {
-    console.log('asdfasdfsadf')
     if (curDirId === null || curDirId === '') {
       return;
     }
-    location.href = "/cloud/private/root" + curDirId;
+    location.href = "/cloud/group/root" + curDirId;
   }
 
   function handleClickFile(dirId, isFile) {
@@ -283,8 +347,14 @@
       download(dirId);
     } else {
       // 폴더 이동
-      location.href = "/cloud/private/" + dirId;
+      location.href = "/cloud/group/" + groupId + '/' + dirId;
     }
+  }
+
+  function onChangeSelect() {
+    let select = document.getElementById('p-navbar__select');
+    let selectValue = select.options[select.selectedIndex].value;
+    location.href = "/cloud/group/" + selectValue;
   }
 </script>
 </html>

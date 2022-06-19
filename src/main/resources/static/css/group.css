@@ -1,0 +1,42 @@
+.p-content {
+    padding: 5px;
+    flex-grow: 1;
+}
+
+.p-header {
+    display: flex;
+    padding: 5px;
+}
+
+.p-navbar {
+    flex-grow: 1;
+    display: flex;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+hr {
+    margin-left: 10px;
+    margin-right: 10px;
+    align-items: center;
+}
+
+h5 {
+    margin: 0;
+    padding: 0;
+}
+
+.p-navbar__text {
+    margin-left: 5px;
+}
+
+.img-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.file-list {
+    height: 97%;
+}
+

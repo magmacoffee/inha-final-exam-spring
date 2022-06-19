@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.ac.inha.wgcloud.group.repository.GroupRepository">
+
+    <select id="selectGroupByEmpId" resultType="kr.ac.inha.wgcloud.group.vo.GroupVo">
+        SELECT
+            w.*
+        FROM
+            workgroupMember wm,
+            workgroup w
+        WHERE
+            wm.empId = #{empId} AND
+            w.groupId = wm.groupId
+    </select>
+
+    <select id="selectGroupByName" resultType="kr.ac.inha.wgcloud.group.vo.GroupVo">
+        SELECT
+            w.*
+        FROM
+            workgroup w
+        WHERE
+            w.name = #{name}
+    </select>
+
+    <insert id="insertGroup" parameterType="kr.ac.inha.wgcloud.group.vo.GroupVo" keyProperty="groupId">
+        INSERT INTO
+        workgroup
+        (
+            groupId,
+            empId,
+            `name`,
+            isDeleted,
+            isPrivate,
+            createDateTime
+        ) VALUES
+        (
+            NULL,
+            #{empId},
+            #{name},
+            0,
+            0,
+            now()
+        )
+    </insert>
+
+    <insert id="insertGroupMember">
+        INSERT INTO
+        workgroupMember
+        (
+            groupId,
+            empId,
+            createDateTime
+        ) VALUES
+        (
+            #{groupId},
+            #{empId},
+            now()
+        )
+    </insert>
+
+</mapper>
