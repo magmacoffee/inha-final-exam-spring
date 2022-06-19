@@ -87,8 +87,7 @@ public class CloudApiController {
 
     @GetMapping("/summary")
     public ResponseEntity<?> getSummary(Principal principal) throws Exception {
-        String id = principal.getName();
-        return ResponseEntity.ok(cloudService.getUserSummary(id));
+        return ResponseEntity.ok(cloudService.getUserSummary(empService.getLoginEmp().getEmpId()));
     }
 
     @DeleteMapping("/file")
