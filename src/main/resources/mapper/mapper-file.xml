@@ -11,6 +11,16 @@
             rootDirId = #{dirId} AND
             isDeleted = 0
     </select>
+    <select id="selectGroupFileList" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
+        SELECT
+            *
+        FROM
+            directory
+        WHERE
+            groupId = #{groupId} AND
+            rootDirId = #{dirId} AND
+            isDeleted = 0
+    </select>
     <select id="selectShareFileList" resultType="kr.ac.inha.wgcloud.file.vo.ShareFileVo">
         SELECT
             d.*,
@@ -20,6 +30,7 @@
             emp e
         WHERE
             d.sharedEmpId = #{empId} AND
+            d.groupId IS NULL AND
             d.isDeleted = 0 AND
             e.empId = d.sharedEmpId
     </select>
@@ -30,6 +41,17 @@
             directory
         WHERE
             empId = #{empId} AND
+            groupId IS NULL AND
+            rootDirId IS NULL AND
+            isDeleted = 0
+    </select>
+    <select id="selectGroupRootFileList" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
+        SELECT
+            *
+        FROM
+            directory
+        WHERE
+            groupId = #{groupId} AND
             rootDirId IS NULL AND
             isDeleted = 0
     </select>
@@ -102,6 +124,7 @@
             directory
         WHERE
             rootDirId = #{dirId} AND
+            groupId IS NULL AND
             isFile = 1 AND
             isDeleted = 0
     </select>

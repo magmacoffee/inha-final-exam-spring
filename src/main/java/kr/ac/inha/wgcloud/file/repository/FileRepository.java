@@ -8,8 +8,10 @@ import java.util.List;
 @Mapper
 public interface FileRepository {
     List<FileVo> selectFileList(String dirId, String empId) throws Exception;
+    List<FileVo> selectGroupFileList(String groupId, String dirId) throws Exception;
     List<FileVo> selectRootFileList(String empId) throws Exception;
     List<FileVo> selectShareFileList(String empId) throws Exception;
+    List<FileVo> selectGroupRootFileList(String groupId) throws Exception;
     List<FileVo> selectFolderContent(String dirId) throws Exception;
     FileVo selectFileById(String dirId) throws Exception;
     void insertFile(FileVo file) throws Exception;

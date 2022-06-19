@@ -17,7 +17,9 @@ public interface FileService {
     void remove(String empId, String dirId) throws Exception;
     FileVo getFileById(String dirId) throws Exception;
     List<FileVo> getFileList(String dirId, String empId) throws Exception;
+    List<FileVo> getGroupFileList(String groupId, String dirId) throws Exception;
     List<FileVo> getRootFileList(String empId) throws Exception;
+    List<FileVo> getGroupRootFileList(String groupId) throws Exception;
     List<FileVo> getShareFileList(String empId) throws Exception;
     List<FileVo> getFolderContent(String dirId) throws Exception;
     void download(String dirId, HttpServletResponse res) throws Exception;

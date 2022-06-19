@@ -40,6 +40,16 @@ public class CloudApiController {
         );
     }
 
+    @PostMapping("/group/folder")
+    public void createGroupFolder(@RequestBody Map<String, Object> param) throws Exception {
+        fileService.mkdir(
+            Integer.toString(empService.getLoginEmp().getEmpId()),
+            (String) param.get("rootId"),
+            (String) param.get("groupId"),
+            (String) param.get("folderName")
+        );
+    }
+
 
     @PostMapping("/rename")
     public void rename(@RequestBody Map<String, Object> param) throws Exception {
@@ -62,6 +72,18 @@ public class CloudApiController {
         return ResponseEntity.ok(null);
     }
 
+
+    @PostMapping("/group/upload/{groupId}")
+    public ResponseEntity<?> uploadToGroup(@PathVariable String groupId, MultipartFile file) throws Exception {
+        return uploadToGroup(groupId, null, file);
+    }
+
+    @PostMapping("/group/upload/{groupId}/{rootId}")
+    public ResponseEntity<?> uploadToGroup(@PathVariable String groupId, @PathVariable String rootId, MultipartFile file) throws Exception {
+        Emp emp = empService.getEmpById(AuthUtil.getLoginUserId());
+        fileService.save(Integer.toString(emp.getEmpId()), rootId, groupId, file);
+        return ResponseEntity.ok(null);
+    }
 
     @GetMapping("/summary")
     public ResponseEntity<?> getSummary(Principal principal) throws Exception {

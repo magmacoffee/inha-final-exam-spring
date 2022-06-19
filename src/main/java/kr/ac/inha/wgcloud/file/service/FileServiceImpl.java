@@ -148,8 +148,18 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public List<FileVo> getGroupFileList(String groupId, String dirId) throws Exception {
+        return fileRepository.selectGroupFileList(groupId, dirId);
+    }
+
+    @Override
     public List<FileVo> getRootFileList(String empId) throws Exception {
         return fileRepository.selectRootFileList(empId);
+    }
+
+    @Override
+    public List<FileVo> getGroupRootFileList(String groupId) throws Exception {
+        return fileRepository.selectGroupRootFileList(groupId);
     }
 
     @Override
