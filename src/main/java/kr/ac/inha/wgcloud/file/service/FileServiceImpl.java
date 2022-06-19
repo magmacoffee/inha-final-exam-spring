@@ -59,9 +59,14 @@ public class FileServiceImpl implements FileService {
         String fileName = UUID.randomUUID().toString();
         File dir = getSavePath();
         File f = new File(dir.getAbsolutePath() + "/" + fileName);
+
         String orgFileName = multipartFile.getOriginalFilename();
-        String name = orgFileName.substring(0, orgFileName.lastIndexOf("."));
-        String ext = orgFileName.substring(orgFileName.lastIndexOf(".") + 1);
+        String name = orgFileName, ext = "";
+        int dotIndex = orgFileName.lastIndexOf(".");
+        if (dotIndex != -1) {
+            name = orgFileName.substring(0, orgFileName.lastIndexOf("."));
+            ext = orgFileName.substring(orgFileName.lastIndexOf(".") + 1);
+        }
         try {
             multipartFile.transferTo(f);
             fileRepository.insertFile(
