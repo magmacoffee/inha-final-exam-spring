@@ -14,7 +14,7 @@
     <!-- 헤더 -->
     <div class="p-header">
         <div class="p-navbar">
-            <a class="btn btn-default"
+            <a id="btnGoRoot" class="btn btn-default"
                     th:href="'/cloud/private/' + (${rootDirId} == null ? '' : ${rootDirId})">
                 <i class="fa-solid fa-arrow-up"></i>
             </a>
@@ -117,13 +117,13 @@
     $("#file-list").on('click', function(e) {
         hideRightClickMenu();
     })
-    $("#folderRightClickMenu a").on("click", function(e) {
+    $("#folder-right-menu a").on("click", function(e) {
         $(this).parent().hide();
     });
-    $("#fileRightClickMenu a").on("click", function(e) {
+    $("#file-right-menu a").on("click", function(e) {
         $(this).parent().hide();
     });
-    $("#emptySpaceRightClickMenu a").on("click", function(e) {
+    $("#empty-space-right-menu a").on("click", function(e) {
         $(this).parent().hide();
     });
     /*
@@ -298,6 +298,15 @@
             location.href = "/cloud/private/" + dirId;
         }
     }
+
+    function rename() {
+        $('rename').modal();
+    }
+
+
+    $('btnGoRoot').on('click', function() {
+        hideRightClickMenu();
+    })
 
 </script>
 </html>
