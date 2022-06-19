@@ -11,14 +11,17 @@
             rootDirId = #{dirId} AND
             isDeleted = 0
     </select>
-    <select id="selectShareFileList" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
+    <select id="selectShareFileList" resultType="kr.ac.inha.wgcloud.file.vo.ShareFileVo">
         SELECT
-            *
+            d.*,
+            e.nickname as shareEmpName
         FROM
-            directory
+            directory d,
+            emp e
         WHERE
-            sharedEmpId = #{empId} AND
-            isDeleted = 0
+            d.sharedEmpId = #{empId} AND
+            d.isDeleted = 0 AND
+            e.empId = d.sharedEmpId
     </select>
     <select id="selectRootFileList" resultType="kr.ac.inha.wgcloud.file.vo.FileVo">
         SELECT

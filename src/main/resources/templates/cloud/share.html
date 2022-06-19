@@ -39,10 +39,9 @@
                data-target="#folderModal" th:text="${file.orgFileName}">
             </a>
           </td>
-          <td></td>
           <td th:if="${file.isFile} == true">파일</td>
           <td th:if="${file.isFile} == false">폴더</td>
-          <td></td>
+          <td th:text="${file.shareEmpName}"></td>
           <td th:text="${file.shareDateTime}" />
         </tr>
       </tbody>
