@@ -11,7 +11,8 @@
 <body class="container" layout:fragment="content">
     <div class="main-content">
         <div class="main-header">
-            <h4 class="main-summary">총 업로드 파일 : 32개 (100MB)</h4>
+            <h4 class="main-summary"
+                th:text="'총 업로드 파일 : ' + ${fileCount} + '개 (' + ${fileTotalSize} + 'MB)'"></h4>
             <button
                 type="button"
                 class="btn btn-primary"

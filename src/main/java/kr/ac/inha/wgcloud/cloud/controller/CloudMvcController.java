@@ -35,8 +35,11 @@ public class CloudMvcController {
     }
 
     @GetMapping("/main")
-    public ModelAndView main() {
+    public ModelAndView main() throws Exception {
         ModelAndView mv = new ModelAndView("/cloud/main");
+        Map<Object, Object> summary = cloudService.getUserSummary(empService.getLoginEmp().getId());
+        mv.addObject("fileCount", summary.get("fileCount"));
+        mv.addObject("fileTotalSize", summary.get("fileTotalSize"));
         return mv;
     }
 

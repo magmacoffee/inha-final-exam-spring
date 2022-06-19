@@ -4,7 +4,7 @@
     <select id="selectFileSummary" resultType="map">
         SELECT
             COUNT(*) fileCount,
-            SUM(fileSize) fileTotalSize
+            CAST(ROUND(SUM(fileSize / (1024 * 1024))) AS signed integer) fileTotalSize
         FROM
             directory d
         WHERE
