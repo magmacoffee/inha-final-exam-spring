@@ -27,36 +27,29 @@
       </thead>
       <tbody>
         <tr th:each="file : ${files}" th:attr="onclick=|handleClickFile(${file.dirId}, ${file.isFile})|">
-          <td>
+          <td th:if="${file.isFile} == true">
             <a th:id="${file.dirId} + ',' + ${file.isFile} + ',a'"
                th:text="${file.orgFileName}"
                href="javascript:;"
             />
           </td>
+          <td th:if="${file.isFile} == false">
+            <a id="btn-open-folder-modal" href="#"
+               data-toggle="modal"
+               data-target="#folderModal" th:text="${file.orgFileName}">
+            </a>
+          </td>
+          <td></td>
           <td th:if="${file.isFile} == true">파일</td>
           <td th:if="${file.isFile} == false">폴더</td>
-          <td>ㅁ</td>
+          <td></td>
           <td th:text="${file.shareDateTime}" />
         </tr>
       </tbody>
     </table>
-    <!--  Folder Modal -->
-    <div class="modal fade" id="folderModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 th:id="folder-modal__title" class="modal-title" id="folderModalLabel"></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-
-          </div>
-        </div>
-      </div>
-    </div>
+    <th:block th:replace="modal/folder :: folderModal">modal</th:block>
   </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script layout:fragment="script">
 
     function download(dirId) {
@@ -96,13 +89,28 @@
     }
 
     function clickFolder(dirId) {
-      $('#folderModal').modal('show');
-      $('#folder-modal__title').text('hello world');
+      $('#folder-modal__table > tbody > tr').remove();
       $.ajax({
-        url: '/api/cloud/folder/' + selectedFileNo,
-        method: 'GET',
+        url: '/api/cloud/folder/' + dirId,
+        type: 'GET',
         success: function(data, status, xhr) {
-
+          let html = '';
+          for (let key in data) {
+            let val = data[key];
+            html += '<tr>';
+            html += '<td>';
+            html += '<img class="img-icon" src="/img/icon_file.png" />';
+            html += '<a id="' + val.dirId + ',' + val.isFile + ',a" ';
+            html += 'href="javascript:download(' + val.dirId + ');">'
+            html += val.orgFileName + '</a>'
+            html += '</td>';
+            html += '</tr>';
+          }
+          $('#folder-modal__table > tbody').append(html);
+          $('#folder-modal-body__title').text('총 ' + data.length + '개 파일');
+        },
+        error: function(res, status, error) {
+          alert(res.responseJSON.message);
         }
       });
     }
@@ -116,6 +124,8 @@
         clickFolder(dirId);
       }
     }
+
   </script>
+
 </body>
 </html>
