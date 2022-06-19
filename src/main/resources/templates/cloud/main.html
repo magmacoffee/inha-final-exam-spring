@@ -12,7 +12,7 @@
     <div class="main-content">
         <div class="main-header">
             <h4 class="main-summary"
-                th:text="'총 업로드 파일 : ' + ${fileCount} + '개 (' + ${fileTotalSize} + 'MB)'"></h4>
+                th:text="'총 업로드 파일 : ' + ${fileCount} + '개 (' + (${fileTotalSize} == null ? 0 : ${fileTotalSize}) + 'MB)'"></h4>
             <button
                 type="button"
                 class="btn btn-primary"
