@@ -4,7 +4,7 @@
     <select id="selectFileSummary" resultType="map">
         SELECT
             COUNT(*) fileCount,
-            CAST(ROUND(SUM(fileSize / (1024 * 1024))) AS signed integer) fileTotalSize
+            ROUND(SUM(fileSize / (1024 * 1024))) fileTotalSize
         FROM
             directory d
         WHERE
@@ -19,5 +19,18 @@
         WHERE
               sharedEmpId = #{empId} AND
               isDeleted = 0
+    </select>
+    <select id="selectUserHistory" resultType="kr.ac.inha.wgcloud.cloud.vo.UserHistory">
+        SELECT
+            fh.*,
+            d.isFile
+        FROM
+            fileHistory fh,
+            directory d
+        WHERE
+            fh.empId = #{empId} AND
+            fh.dirId = d.dirId
+        ORDER BY
+            createDateTime DESC
     </select>
 </mapper>

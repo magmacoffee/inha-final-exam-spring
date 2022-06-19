@@ -1,6 +1,7 @@
 package kr.ac.inha.wgcloud.cloud.controller;
 
 import kr.ac.inha.wgcloud.cloud.service.CloudService;
+import kr.ac.inha.wgcloud.cloud.vo.UserHistory;
 import kr.ac.inha.wgcloud.emp.service.EmpService;
 import kr.ac.inha.wgcloud.emp.vo.Emp;
 import kr.ac.inha.wgcloud.file.service.FileService;
@@ -46,10 +47,13 @@ public class CloudMvcController {
 
     @GetMapping("/main")
     public ModelAndView main() throws Exception {
+        int loginEmpId = empService.getLoginEmp().getEmpId();
         ModelAndView mv = new ModelAndView("/cloud/main");
-        Map<Object, Object> summary = cloudService.getUserSummary(empService.getLoginEmp().getId());
+        Map<Object, Object> summary = cloudService.getUserSummary(loginEmpId);
         mv.addObject("fileCount", summary.get("fileCount"));
         mv.addObject("fileTotalSize", summary.get("fileTotalSize"));
+        List<UserHistory> histories = cloudService.getUserHistories(loginEmpId);
+        mv.addObject("histories", histories);
         return mv;
     }
 

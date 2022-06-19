@@ -32,7 +32,13 @@
                 <th scope="col">활동 일시</th>
                 </thead>
                 <tbody>
-
+                    <tr th:each="history : ${histories}">
+                        <td th:text="${history.summary}"></td>
+                        <td th:if="${history.isFile} == true">파일</td>
+                        <td th:if="${history.isFile} == false">폴더</td>
+                        <td th:text="${history.description}"></td>
+                        <td th:text="${history.createDateTime}"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -41,7 +47,6 @@
 </body>
 
 <script>
-    // https://frontbackend.com/thymeleaf/spring-boot-bootstrap-thymeleaf-modal
 </script>
 
 </html>
