@@ -178,7 +178,7 @@ public class FileServiceImpl implements FileService {
         if (!file.isFile() || file.isDeleted()) {
             throw new Exception("다운로드가 불가능 합니다.");
         }
-        String fileName = URLEncoder.encode(file.getOrgFileName(), "UTF-8");
+        String fileName = URLEncoder.encode(file.getOrgFileName() + "." + file.getExt(), "UTF-8");
         res.setContentType("application/octet-stream");
         res.setHeader("Content-Transfer-Encoding", "binary;");
         res.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
