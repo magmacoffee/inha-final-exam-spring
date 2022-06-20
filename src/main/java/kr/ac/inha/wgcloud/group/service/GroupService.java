@@ -6,6 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface GroupService {
-    List<GroupVo> getGroupByEmpId(String empId) throws Exception;
+    List<GroupVo> getGroupByEmpId(String empId);
     void addNewGroup(String addEmpId, Map<String, Object> param);
 }

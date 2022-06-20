@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +26,7 @@ public class FileServiceImpl implements FileService {
         this.fileRepository = fileRepository;
     }
 
-    private String getCurPath(String rootId, String fileName) throws Exception {
+    private String getCurPath(String rootId, String fileName) {
         if (rootId == null || rootId.equals("")) {
             return "/" + fileName;
         } else {
@@ -42,7 +39,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void save(String empId, String rootId, MultipartFile multi) throws Exception {
+    public void save(String empId, String rootId, MultipartFile multi) {
         save(empId, rootId,null, multi);
     }
 
@@ -55,7 +52,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void save(String empId, String rootId, String groupId, MultipartFile multipartFile) throws Exception {
+    public void save(String empId, String rootId, String groupId, MultipartFile multipartFile) {
         String fileName = UUID.randomUUID().toString();
         File dir = getSavePath();
         File f = new File(dir.getAbsolutePath() + "/" + fileName);
@@ -85,15 +82,15 @@ public class FileServiceImpl implements FileService {
                     .downCount(0)
                     .build()
             );
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             f.delete();
             ex.printStackTrace();
-            throw ex;
+            throw new ApiException(ApiErrorCode.FILE_SAVE_FAILED);
         }
     }
 
     @Override
-    public void mkdir(String empId, String rootId, String groupId, String name) throws Exception {
+    public void mkdir(String empId, String rootId, String groupId, String name) {
         String path = getCurPath(rootId, name);
         FileVo f = FileVo
             .builder()
@@ -113,89 +110,94 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void mkdir(String empId, String rootId, String name) throws Exception {
+    public void mkdir(String empId, String rootId, String name) {
         mkdir(empId, rootId, null, name);
     }
 
     @Override
-    public void rename(String empId, String dirId, String newName) throws Exception {
+    public void rename(String empId, String dirId, String newName) {
         FileVo file = getFileById(dirId);
         if (file.getEmpId().equals(empId)) {
             fileRepository.updateName(dirId, newName);
         } else {
-            throw new Exception("본인 소유의 파일이 아닙니다!");
+            throw new ApiException(ApiErrorCode.NOT_MY_FILE);
         }
     }
 
     @Override
-    public void remove(String empId, String dirId) throws Exception {
+    public void remove(String empId, String dirId) {
         FileVo file = getFileById(dirId);
         if (file.getEmpId().equals(empId)) {
             fileRepository.deleteFile(dirId);
         } else {
-            throw new Exception("본인 소유의 파일이 아닙니다!");
+            throw new ApiException(ApiErrorCode.NOT_MY_FILE);
         }
     }
 
     @Override
-    public FileVo getFileById(String dirId) throws Exception {
+    public FileVo getFileById(String dirId) {
         return fileRepository.selectFileById(dirId);
     }
 
     @Override
-    public List<FileVo> getFileList(String dirId, String empId) throws Exception {
+    public List<FileVo> getFileList(String dirId, String empId) {
         return fileRepository.selectFileList(dirId, empId);
     }
 
     @Override
-    public List<FileVo> getGroupFileList(String groupId, String dirId) throws Exception {
+    public List<FileVo> getGroupFileList(String groupId, String dirId) {
         return fileRepository.selectGroupFileList(groupId, dirId);
     }
 
     @Override
-    public List<FileVo> getRootFileList(String empId) throws Exception {
+    public List<FileVo> getRootFileList(String empId) {
         return fileRepository.selectRootFileList(empId);
     }
 
     @Override
-    public List<FileVo> getGroupRootFileList(String groupId) throws Exception {
+    public List<FileVo> getGroupRootFileList(String groupId) {
         return fileRepository.selectGroupRootFileList(groupId);
     }
 
     @Override
-    public List<FileVo> getShareFileList(String empId) throws Exception {
+    public List<FileVo> getShareFileList(String empId) {
         return fileRepository.selectShareFileList(empId);
     }
 
     @Override
-    public List<FileVo> getFolderContent(String dirId) throws Exception {
+    public List<FileVo> getFolderContent(String dirId) {
         return fileRepository.selectFolderContent(dirId);
     }
 
     @Override
-    public void download(String dirId, HttpServletResponse res) throws Exception {
+    public void download(String dirId, HttpServletResponse res) {
         FileVo file = fileRepository.selectFileById(dirId);
         if (!file.isFile() || file.isDeleted()) {
-            throw new Exception("다운로드가 불가능 합니다.");
+            throw new ApiException(ApiErrorCode.CANNOT_DOWNLOAD);
         }
-        String fileName = URLEncoder.encode(file.getOrgFileName() + "." + file.getExt(), "UTF-8");
-        res.setContentType("application/octet-stream");
-        res.setHeader("Content-Transfer-Encoding", "binary;");
-        res.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
-        res.setHeader("X-Filename", fileName);
-        OutputStream os = res.getOutputStream();
-        int read;
-        byte[] buf = new byte[1024];
-        try (InputStream is = new FileInputStream(file.getFilePath())) {
-            while ((read = is.read(buf)) != -1) {
-                os.write(buf, 0, read);
+        try {
+            String fileName = URLEncoder.encode(file.getOrgFileName() + "." + file.getExt(), "UTF-8");
+            res.setContentType("application/octet-stream");
+            res.setHeader("Content-Transfer-Encoding", "binary;");
+            res.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
+            res.setHeader("X-Filename", fileName);
+            OutputStream os = res.getOutputStream();
+            int read;
+            byte[] buf = new byte[1024];
+            try (InputStream is = new FileInputStream(file.getFilePath())) {
+                while ((read = is.read(buf)) != -1) {
+                    os.write(buf, 0, read);
+                }
             }
+            os.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new ApiException(ApiErrorCode.DOWNLOAD_FAILED);
         }
-        os.close();
     }
 
     @Override
-    public void updateShareStatus(String empId, String targetEmpId, String dirId) throws Exception {
+    public void updateShareStatus(String empId, String targetEmpId, String dirId) {
         FileVo fileVo = fileRepository.selectFileById(dirId);
         if (!fileVo.getEmpId().equals(empId)) {
             throw new ApiException(ApiErrorCode.SHARE_NOT_ALLOWED);

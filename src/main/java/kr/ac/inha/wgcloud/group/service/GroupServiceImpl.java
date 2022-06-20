@@ -21,7 +21,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<GroupVo> getGroupByEmpId(String empId) throws Exception {
+    public List<GroupVo> getGroupByEmpId(String empId){
         return groupRepository.selectGroupByEmpId(empId);
     }
 

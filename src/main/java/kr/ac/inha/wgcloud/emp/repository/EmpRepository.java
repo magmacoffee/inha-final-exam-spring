@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 @Mapper
 public interface EmpRepository {
-    Emp selectEmpById(String id) throws Exception;
-    Emp selectEmpByNick(String nick) throws Exception;
-    void insertEmp(Emp emp) throws Exception;
+    Emp selectEmpById(String id);
+    Emp selectEmpByNick(String nick);
+    void insertEmp(Emp emp);
 }

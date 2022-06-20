@@ -1,5 +1,7 @@
 package kr.ac.inha.wgcloud.emp.service;
 
+import kr.ac.inha.wgcloud.common.ApiErrorCode;
+import kr.ac.inha.wgcloud.common.ApiException;
 import kr.ac.inha.wgcloud.emp.repository.EmpRepository;
 import kr.ac.inha.wgcloud.emp.vo.Emp;
 import kr.ac.inha.wgcloud.util.AuthUtil;
@@ -19,7 +21,7 @@ public class EmpServiceImpl implements EmpService {
         this.empRepository = empRepository;
     }
 
-    private void checkEmpData(Emp emp) throws Exception {
+    private void checkEmpData(Emp emp) {
         String[] emptyCheck = new String[] {
                 emp.getId(),
                 emp.getNickname(),
@@ -30,29 +32,29 @@ public class EmpServiceImpl implements EmpService {
         };
         for (String data : emptyCheck) {
             if (StringUtils.isEmpty(data)) {
-                throw new Exception("빈 칸이 존재합니다! 모든 항목을 채워주세요");
+                throw new ApiException(ApiErrorCode.HAS_EMPTY_DATA);
             }
         }
         Emp idExist = empRepository.selectEmpById(emp.getId());
         if (idExist != null) {
-            throw new Exception("이미 존재하는 아이디 입니다.");
+            throw new ApiException(ApiErrorCode.ID_EXISTS);
         }
         Emp nickExist = empRepository.selectEmpByNick(emp.getNickname());
         if (nickExist != null) {
-            throw new Exception("이미 존재하는 닉네임 입니다.");
+            throw new ApiException(ApiErrorCode.NICK_EXISTS);
         }
         if (!emp.getPassword().equals(emp.getPasswordCheck())) {
-            throw new Exception("패스워드와 패스워드 확인이 일치하지 않습니다.");
+            throw new ApiException(ApiErrorCode.PWD_CHECK_DIFFERENT);
         }
     }
 
     @Override
-    public Emp getLoginEmp() throws Exception {
+    public Emp getLoginEmp() {
         return getEmpById(AuthUtil.getLoginUserId());
     }
 
     @Override
-    public Emp getEmpById(String id) throws Exception {
+    public Emp getEmpById(String id) {
         Emp emp = empRepository.selectEmpById(id);
         if (emp == null) { return null; }
         // Password 정보 제거
@@ -61,7 +63,7 @@ public class EmpServiceImpl implements EmpService {
     }
 
     @Override
-    public void addEmp(Emp emp) throws Exception {
+    public void addEmp(Emp emp) {
         checkEmpData(emp);
         empRepository.insertEmp(emp);
     }
