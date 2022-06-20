@@ -46,7 +46,7 @@ public class CloudMvcController {
     }
 
     @GetMapping("/main")
-    public ModelAndView main() throws Exception {
+    public ModelAndView main() {
         int loginEmpId = empService.getLoginEmp().getEmpId();
         ModelAndView mv = new ModelAndView("/cloud/main");
         Map<Object, Object> summary = cloudService.getUserSummary(loginEmpId);
@@ -95,7 +95,7 @@ public class CloudMvcController {
     }
 
     @GetMapping("/group")
-    public ModelAndView group() throws Exception {
+    public ModelAndView group() {
         ModelAndView mv = new ModelAndView("/cloud/group");
         List<GroupVo> groupList = groupService.getGroupByEmpId(Integer.toString(empService.getLoginEmp().getEmpId()));
         mv.addObject("groupList", groupList);
@@ -104,7 +104,7 @@ public class CloudMvcController {
     }
 
     @GetMapping("/group/{groupId}")
-    public ModelAndView group(@PathVariable String groupId) throws Exception {
+    public ModelAndView group(@PathVariable String groupId) {
         ModelAndView mv = new ModelAndView("/cloud/group");
         List<GroupVo> groupList = groupService.getGroupByEmpId(Integer.toString(empService.getLoginEmp().getEmpId()));
         mv.addObject("groupList", groupList);
@@ -119,7 +119,7 @@ public class CloudMvcController {
     }
 
     @GetMapping("/group/{groupId}/{dirId}")
-    public ModelAndView group(@PathVariable String groupId, @PathVariable String dirId) throws Exception {
+    public ModelAndView group(@PathVariable String groupId, @PathVariable String dirId) {
         ModelAndView mv = new ModelAndView("/cloud/group");
         List<GroupVo> groupList = groupService.getGroupByEmpId(Integer.toString(empService.getLoginEmp().getEmpId()));
         mv.addObject("groupList", groupList);

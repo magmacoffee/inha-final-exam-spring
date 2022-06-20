@@ -27,17 +27,17 @@ public class CloudServiceImpl implements CloudService {
     }
 
     @Override
-    public Map<Object, Object> getUserSummary(int empId) throws Exception {
+    public Map<Object, Object> getUserSummary(int empId) {
         return cloudRepository.selectFileSummary(empId);
     }
 
     @Override
-    public Map<Object, Object> getShareSummary(int empId) throws Exception {
+    public Map<Object, Object> getShareSummary(int empId) {
         return cloudRepository.selectShareSummary(empId);
     }
 
     @Override
-    public List<UserHistory> getUserHistories(int empId) throws Exception {
+    public List<UserHistory> getUserHistories(int empId) {
         return cloudRepository.selectUserHistory(empId);
     }
 

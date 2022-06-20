@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Mapper
 public interface CloudRepository {
-    Map<Object, Object> selectFileSummary(int empId) throws Exception;
-    Map<Object, Object> selectShareSummary(int empId) throws Exception;
-    List<UserHistory> selectUserHistory(int empId) throws Exception;
+    Map<Object, Object> selectFileSummary(int empId);
+    Map<Object, Object> selectShareSummary(int empId);
+    List<UserHistory> selectUserHistory(int empId);
 }
