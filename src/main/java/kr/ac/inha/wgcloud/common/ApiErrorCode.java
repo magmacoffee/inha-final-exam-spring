@@ -19,7 +19,8 @@ public enum ApiErrorCode implements ErrorCode {
     FILE_SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 저장에 실패하였습니다. 관리자에게 문의하여 주세요."),
     FILE_ACCESS_NOT_MY_FILE(HttpStatus.NOT_ACCEPTABLE, "본인 소유의 파일이 아닙니다!"),
     FILE_DOWN_NOT_FILE(HttpStatus.BAD_REQUEST, "다운로드가 불가능합니다."),
-    FILE_DOWN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "다운로드를 요청하는 중 문제가 발생하였습니다.");
+    FILE_DOWN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "다운로드를 요청하는 중 문제가 발생하였습니다."),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "에러가 발생하였습니다. 관리자에게 문의하세요.");
 
     private final HttpStatus httpStatus;
     private final String message;
