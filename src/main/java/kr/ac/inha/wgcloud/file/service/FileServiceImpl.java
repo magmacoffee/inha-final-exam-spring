@@ -120,7 +120,7 @@ public class FileServiceImpl implements FileService {
         if (file.getEmpId().equals(empId)) {
             fileRepository.updateName(dirId, newName);
         } else {
-            throw new ApiException(ApiErrorCode.NOT_MY_FILE);
+            throw new ApiException(ApiErrorCode.FILE_ACCESS_NOT_MY_FILE);
         }
     }
 
@@ -130,7 +130,7 @@ public class FileServiceImpl implements FileService {
         if (file.getEmpId().equals(empId)) {
             fileRepository.deleteFile(dirId);
         } else {
-            throw new ApiException(ApiErrorCode.NOT_MY_FILE);
+            throw new ApiException(ApiErrorCode.FILE_ACCESS_NOT_MY_FILE);
         }
     }
 
@@ -173,7 +173,7 @@ public class FileServiceImpl implements FileService {
     public void download(String dirId, HttpServletResponse res) {
         FileVo file = fileRepository.selectFileById(dirId);
         if (!file.isFile() || file.isDeleted()) {
-            throw new ApiException(ApiErrorCode.CANNOT_DOWNLOAD);
+            throw new ApiException(ApiErrorCode.FILE_DOWN_NOT_FILE);
         }
         try {
             String fileName = URLEncoder.encode(file.getOrgFileName() + "." + file.getExt(), "UTF-8");
@@ -192,7 +192,7 @@ public class FileServiceImpl implements FileService {
             os.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new ApiException(ApiErrorCode.DOWNLOAD_FAILED);
+            throw new ApiException(ApiErrorCode.FILE_DOWN_FAILED);
         }
     }
 
@@ -200,9 +200,9 @@ public class FileServiceImpl implements FileService {
     public void updateShareStatus(String empId, String targetEmpId, String dirId) {
         FileVo fileVo = fileRepository.selectFileById(dirId);
         if (!fileVo.getEmpId().equals(empId)) {
-            throw new ApiException(ApiErrorCode.SHARE_NOT_ALLOWED);
+            throw new ApiException(ApiErrorCode.FILE_SHARE_NOT_ALLOWED);
         } else if (empId.equals(targetEmpId)) {
-            throw new ApiException(ApiErrorCode.CANNOT_SHARE_TO_ME);
+            throw new ApiException(ApiErrorCode.FILE_CANNOT_SHARE_TO_ME);
         }
         fileRepository.updateShareStatus(targetEmpId, dirId);
     }

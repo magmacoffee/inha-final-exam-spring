@@ -30,7 +30,7 @@ public class GroupServiceImpl implements GroupService {
         String name = (String) param.get("name");
         GroupVo exist = groupRepository.selectGroupByName(name);
         if (exist != null) {
-            throw new ApiException(ApiErrorCode.GROUP_NAME_DUPLICATE);
+            throw new ApiException(ApiErrorCode.GROUP_ADD_NAME_DUPLICATE);
         }
         GroupVo group = new GroupVo();
         group.setEmpId(addEmpId);

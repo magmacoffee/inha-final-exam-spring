@@ -118,7 +118,7 @@ public class CloudApiController {
         String targetEmpId = (String) param.get("empId");
         Emp emp = empService.getEmpById(targetEmpId);
         if (emp == null) {
-            throw new ApiException(ApiErrorCode.EMP_NOT_EXISTS);
+            throw new ApiException(ApiErrorCode.EMP_SEARCH_NOT_EXISTS);
         }
         fileService.updateShareStatus(
             Integer.toString(empService.getLoginEmp().getEmpId()),

@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
-import java.util.HashMap;
-
 @Service
 public class EmpServiceImpl implements EmpService {
 
@@ -32,19 +30,19 @@ public class EmpServiceImpl implements EmpService {
         };
         for (String data : emptyCheck) {
             if (StringUtils.isEmpty(data)) {
-                throw new ApiException(ApiErrorCode.HAS_EMPTY_DATA);
+                throw new ApiException(ApiErrorCode.EMP_SIGNUP_EMPTY_DATA);
             }
         }
         Emp idExist = empRepository.selectEmpById(emp.getId());
         if (idExist != null) {
-            throw new ApiException(ApiErrorCode.ID_EXISTS);
+            throw new ApiException(ApiErrorCode.EMP_SIGNUP_ID_EXISTS);
         }
         Emp nickExist = empRepository.selectEmpByNick(emp.getNickname());
         if (nickExist != null) {
-            throw new ApiException(ApiErrorCode.NICK_EXISTS);
+            throw new ApiException(ApiErrorCode.EMP_SIGNUP_NICK_EXISTS);
         }
         if (!emp.getPassword().equals(emp.getPasswordCheck())) {
-            throw new ApiException(ApiErrorCode.PWD_CHECK_DIFFERENT);
+            throw new ApiException(ApiErrorCode.EMP_SIGNUP_PWD_CHECK_DIFFERENT);
         }
     }
 
