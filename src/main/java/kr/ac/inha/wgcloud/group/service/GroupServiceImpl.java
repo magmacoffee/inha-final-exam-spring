@@ -6,6 +6,7 @@ import kr.ac.inha.wgcloud.group.repository.GroupRepository;
 import kr.ac.inha.wgcloud.group.vo.GroupVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional
     public void addNewGroup(String addEmpId, Map<String, Object> param) {
         String name = (String) param.get("name");
         GroupVo exist = groupRepository.selectGroupByName(name);
@@ -42,11 +44,7 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.insertGroupMember(added.getGroupId(), addEmpId);
         // 구성원 추가
         for (Integer id : empList) {
-            try {
-                groupRepository.insertGroupMember(added.getGroupId(), Integer.toString(id));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            groupRepository.insertGroupMember(added.getGroupId(), Integer.toString(id));
         }
     }
 
