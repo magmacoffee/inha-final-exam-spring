@@ -10,8 +10,8 @@
 <div class="form-content">
     <h2 class="form-header">인하기업 협업 Cloud</h2>
     <form action="/login" method="post">
-        <div th:if="${param.error}" th:text="${param.error}" class="alert alert-danger" role="alert">
-<!--            Invalid username and password-->
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            Invalid username and password
         </div>
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="username" name="username" placeholder="User Id">
