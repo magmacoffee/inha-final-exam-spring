@@ -28,7 +28,7 @@ public class GroupApiController {
     }
 
     @PostMapping("/")
-    public void addGroup(@RequestBody Map<String, Object> param) throws Exception {
+    public void addGroup(@RequestBody Map<String, Object> param) {
         groupService.addNewGroup(
             Integer.toString(empService.getLoginEmp().getEmpId()),
             param

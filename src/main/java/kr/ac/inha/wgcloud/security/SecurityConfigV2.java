@@ -38,7 +38,7 @@ public class SecurityConfigV2 {
             .loginPage("/login")
             .loginProcessingUrl("/login")
                 .permitAll()
-            .defaultSuccessUrl("/cloud/main")
+            .defaultSuccessUrl("/main")
                 .permitAll()
                 .and()
             .logout()

@@ -35,7 +35,7 @@ public class EmpMvcController {
     }
 
     @PostMapping("/signup")
-    public String signup(Emp emp, Model model) throws Exception {
+    public String signup(Emp emp, Model model) {
         try {
             empService.addEmp(emp);
         } catch (Exception ex) {
@@ -47,7 +47,7 @@ public class EmpMvcController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);

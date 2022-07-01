@@ -32,7 +32,7 @@ public class CloudApiController {
     }
 
     @PostMapping("/folder")
-    public void createNewFolder(@RequestBody Map<String, Object> param) throws Exception {
+    public void createNewFolder(@RequestBody Map<String, Object> param) {
         fileService.mkdir(
             Integer.toString(empService.getLoginEmp().getEmpId()),
             (String) param.get("rootId"),
@@ -41,7 +41,7 @@ public class CloudApiController {
     }
 
     @PostMapping("/group/folder")
-    public void createGroupFolder(@RequestBody Map<String, Object> param) throws Exception {
+    public void createGroupFolder(@RequestBody Map<String, Object> param) {
         fileService.mkdir(
             Integer.toString(empService.getLoginEmp().getEmpId()),
             (String) param.get("rootId"),
@@ -52,7 +52,7 @@ public class CloudApiController {
 
 
     @PostMapping("/rename")
-    public void rename(@RequestBody Map<String, Object> param) throws Exception {
+    public void rename(@RequestBody Map<String, Object> param) {
         fileService.rename(
             Integer.toString(empService.getLoginEmp().getEmpId()),
             (String) param.get("dirId"),
@@ -61,12 +61,12 @@ public class CloudApiController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(MultipartFile file) throws Exception {
+    public ResponseEntity<?> upload(MultipartFile file) {
         return upload(null, file);
     }
 
     @PostMapping("/upload/{rootId}")
-    public ResponseEntity<?> upload(@PathVariable String rootId, MultipartFile file) throws Exception {
+    public ResponseEntity<?> upload(@PathVariable String rootId, MultipartFile file) {
         Emp emp = empService.getEmpById(AuthUtil.getLoginUserId());
         fileService.save(Integer.toString(emp.getEmpId()), rootId, file);
         return ResponseEntity.ok(null);
@@ -74,24 +74,24 @@ public class CloudApiController {
 
 
     @PostMapping("/group/upload/{groupId}")
-    public ResponseEntity<?> uploadToGroup(@PathVariable String groupId, MultipartFile file) throws Exception {
+    public ResponseEntity<?> uploadToGroup(@PathVariable String groupId, MultipartFile file) {
         return uploadToGroup(groupId, null, file);
     }
 
     @PostMapping("/group/upload/{groupId}/{rootId}")
-    public ResponseEntity<?> uploadToGroup(@PathVariable String groupId, @PathVariable String rootId, MultipartFile file) throws Exception {
+    public ResponseEntity<?> uploadToGroup(@PathVariable String groupId, @PathVariable String rootId, MultipartFile file) {
         Emp emp = empService.getEmpById(AuthUtil.getLoginUserId());
         fileService.save(Integer.toString(emp.getEmpId()), rootId, groupId, file);
         return ResponseEntity.ok(null);
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<?> getSummary(Principal principal) throws Exception {
+    public ResponseEntity<?> getSummary(Principal principal) {
         return ResponseEntity.ok(cloudService.getUserSummary(empService.getLoginEmp().getEmpId()));
     }
 
     @DeleteMapping("/file")
-    public void deleteFile(@RequestParam String dirId) throws Exception {
+    public void deleteFile(@RequestParam String dirId) {
         fileService.remove(
             Integer.toString(empService.getLoginEmp().getEmpId()),
             dirId
@@ -99,7 +99,7 @@ public class CloudApiController {
     }
 
     @GetMapping("/download/{dirId}")
-    public void download(HttpServletResponse res, @PathVariable String dirId) throws Exception {
+    public void download(HttpServletResponse res, @PathVariable String dirId) {
         try {
             fileService.download(dirId, res);
         } catch (Exception ex) {
@@ -109,12 +109,12 @@ public class CloudApiController {
     }
 
     @GetMapping("/folder/{dirId}")
-    public ResponseEntity<?> getFolderContent(@PathVariable String dirId) throws Exception {
+    public ResponseEntity<?> getFolderContent(@PathVariable String dirId) {
         return ResponseEntity.ok(fileService.getFolderContent(dirId));
     }
 
     @PostMapping("/share/{dirId}")
-    public void share(@PathVariable String dirId, @RequestBody Map<String, Object> param) throws Exception {
+    public void share(@PathVariable String dirId, @RequestBody Map<String, Object> param) {
         String targetEmpId = (String) param.get("empId");
         Emp emp = empService.getEmpById(targetEmpId);
         if (emp == null) {

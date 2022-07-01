@@ -25,13 +25,13 @@ public class EmpApiController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<?> getLoginEmp(Principal principal) throws Exception {
+    public ResponseEntity<?> getLoginEmp(Principal principal) {
         String id = principal.getName();
         return ResponseEntity.ok(empService.getEmpById(id));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEmp(@PathVariable String id) throws Exception {
+    public ResponseEntity<?> getEmp(@PathVariable String id) {
         Emp emp = empService.getEmpById(id);
         return ResponseEntity.ok(emp);
     }
